@@ -18,3 +18,4 @@ dataset_indonesia/waveform/
 dataset_indonesia/npz/
 dataset_indonesia/npz_padded/
 .cursorignore
+dataset_indonesia/dataset_indonesia_eqt_format/
