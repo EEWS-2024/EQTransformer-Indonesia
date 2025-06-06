@@ -19,3 +19,6 @@ dataset_indonesia/npz/
 dataset_indonesia/npz_padded/
 .cursorignore
 dataset_indonesia/dataset_indonesia_eqt_format/
+dataset_indonesia_eqt_full_sample/
+datasets/
+training_scripts/
