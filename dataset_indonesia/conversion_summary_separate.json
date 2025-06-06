@@ -1,0 +1,11 @@
+{
+  "total_train_files": 1950,
+  "successful_train_conversions": 0,
+  "total_valid_files": 103,
+  "successful_valid_conversions": 0,
+  "train_hdf5_file": "indonesia_train_dataset.hdf5",
+  "train_csv_file": "indonesia_train_dataset.csv",
+  "valid_hdf5_file": "indonesia_valid_dataset.hdf5",
+  "valid_csv_file": "indonesia_valid_dataset.csv",
+  "conversion_time": "2025-06-06T18:17:10.004954"
+}
