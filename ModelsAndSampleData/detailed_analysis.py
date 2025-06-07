@@ -212,19 +212,19 @@ def compare_with_indonesia_dataset():
         
         print(f"📊 PERBANDINGAN UKURAN DATA:")
         print(f"   🌏 EQTransformer (global): 100 samples")
-        print(f"   🇮🇩 Indonesia dataset: {indonesia_data['total_files']} samples")
+        print(f"   Indonesia dataset: {indonesia_data['total_files']} samples")
         
         print(f"\n📏 PERBANDINGAN PANJANG WAVEFORM:")
         print(f"   🌏 EQTransformer: 6000 samples (60 detik @ 100Hz)")
-        print(f"   🇮🇩 Indonesia: {indonesia_data['data_length_stats']['mean']:.0f} samples (~{indonesia_data['data_length_stats']['mean']/100:.0f} detik @ 100Hz)")
+        print(f"   Indonesia: {indonesia_data['data_length_stats']['mean']:.0f} samples (~{indonesia_data['data_length_stats']['mean']/100:.0f} detik @ 100Hz)")
         
         print(f"\n📍 PERBANDINGAN DISTRIBUSI STASIUN:")
         print(f"   🌏 EQTransformer: 1 stasiun (109C)")
-        print(f"   🇮🇩 Indonesia: {len(indonesia_data['station_distribution'])} stasiun")
+        print(f"   Indonesia: {len(indonesia_data['station_distribution'])} stasiun")
         
         print(f"\n⏱️  PERBANDINGAN INTERVAL P-S:")
         print(f"   🌏 EQTransformer: ~12-22 detik (berdasarkan CSV)")
-        print(f"   🇮🇩 Indonesia: {indonesia_data.get('p_index_stats', {}).get('mean', 0)/100:.1f} - {indonesia_data.get('s_index_stats', {}).get('mean', 0)/100:.1f} detik")
+        print(f"   Indonesia: {indonesia_data.get('p_index_stats', {}).get('mean', 0)/100:.1f} - {indonesia_data.get('s_index_stats', {}).get('mean', 0)/100:.1f} detik")
     else:
         print("⚠️  File dataset Indonesia tidak ditemukan untuk perbandingan")
 

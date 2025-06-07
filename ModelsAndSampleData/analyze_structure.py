@@ -142,7 +142,7 @@ def compare_formats():
    • Region: Amerika Serikat (California)
    • Network: TA (Transportable Array)
    
-🇮🇩 DATASET INDONESIA:
+DATASET INDONESIA:
    • Format: NPZ + CSV metadata
    • Window: Variable length (rata-rata ~50-120 detik)
    • Channels: 3 (E, N, Z)

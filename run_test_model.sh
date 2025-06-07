@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# 🇮🇩 EQTransformer Indonesia Model Tester Script 🌋
+# EQTransformer Indonesia Model Tester Script 🌋
 # Script untuk testing model Indonesia dengan parameter yang mudah diubah
 
-echo "🇮🇩 EQTransformer Indonesia Model Tester 🌋"
+echo "EQTransformer Indonesia Model Tester 🌋"
 echo "=================================================="
 
 # =============================================================================
@@ -12,6 +12,15 @@ echo "=================================================="
 
 # Model path (kosong = auto detect model terbaru)
 MODEL_PATH=""
+
+# CATATAN PENTING: Original model tidak kompatibel dengan dataset Indonesia!
+# Original model: Input (6000, 3) - 60 detik @ 100Hz
+# Indonesia dataset: Input (30085, 3) - 300.8 detik @ 100Hz
+# Gunakan model Indonesia yang sudah dilatih untuk input shape yang sesuai
+
+# UNTUK ORIGINAL MODEL (TIDAK KOMPATIBEL):
+# MODEL_PATH="models/original_model/EqT_original_model.h5"
+# MODEL_PATH="models/original_model_conservative/EqT_model_conservative.h5"
 
 # Test dataset paths  
 TEST_CSV="../../datasets/indonesia_valid.csv"

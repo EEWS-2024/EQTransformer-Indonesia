@@ -1,4 +1,4 @@
-🇮🇩 EQTransformer Indonesia Model Performance Metrics 🌋
+EQTransformer Indonesia Model Performance Metrics 🌋
 ======================================================================
 
 🎯 DETECTION ACCURACY:

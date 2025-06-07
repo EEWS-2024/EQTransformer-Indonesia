@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🇮🇩 EQTransformer Training untuk Dataset Indonesia 🌋
+EQTransformer Training untuk Dataset Indonesia 🌋
 
 Script training utama untuk melatih EQTransformer dengan data seismik Indonesia
 Input: 30085 samples (300.8 detik @ 100Hz) - 5x lebih panjang dari default EQTransformer
@@ -264,7 +264,7 @@ def train_indonesia_eqt(
         Contoh: debug_traces=10 untuk test cepat
     """
     
-    print("🇮🇩 TRAINING EQTRANSFORMER INDONESIA 🌋")
+    print("TRAINING EQTRANSFORMER INDONESIA 🌋")
     print("="*80)
     
     # Verifikasi dataset
@@ -1127,7 +1127,7 @@ def train_indonesia_eqt(
     # Training summary
     print("📝 Writing training summary...")
     with open(os.path.join(output_dir, 'training_summary.txt'), 'w') as f:
-        f.write("🇮🇩 EQTransformer Indonesia Training Summary 🌋\n")
+        f.write("EQTransformer Indonesia Training Summary 🌋\n")
         f.write("="*60 + "\n")
         f.write(f"Dataset: Indonesia Seismic Data\n")
         f.write(f"Input dimension: {input_dim}\n")
@@ -1158,7 +1158,7 @@ def train_indonesia_eqt(
 
 if __name__ == "__main__":
     """
-    🇮🇩 EQTransformer Indonesia Training Script 🌋
+    EQTransformer Indonesia Training Script 🌋
     
     Script ini dipanggil oleh run_gpu_training.sh dengan parameter yang sudah dikonfigurasi.
     Untuk training langsung, gunakan: ./run_gpu_training.sh
@@ -1172,7 +1172,7 @@ if __name__ == "__main__":
     - DEBUG_TRACES: kosong untuk full data, angka untuk limit traces
     """
     
-    print("🇮🇩 EQTransformer Indonesia Training 🌋")
+    print("EQTransformer Indonesia Training 🌋")
     print(f"🖥️ Hardware: {'GPU' if gpu_available else 'CPU'}")
     print("📝 Note: Script ini biasanya dipanggil dari run_gpu_training.sh")
     print("⚙️ Untuk custom parameters, edit run_gpu_training.sh")
@@ -1230,4 +1230,4 @@ if __name__ == "__main__":
         print(f"💾 Training history: {os.path.join(relative_output, 'training_history.csv')}")
         print(f"📈 Loss curves: {os.path.join(relative_output, 'loss_curves.png')}")
     
-    print("\n🇮🇩 Selesai! 🌋") 
+    print("\nSelesai! 🌋") 

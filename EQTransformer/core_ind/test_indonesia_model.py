@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-🇮🇩 EQTransformer Indonesia Model Tester 🌋
+EQTransformer Indonesia Model Tester 🌋
 
 Script untuk testing model EQTransformer Indonesia yang sudah di-training
 Input: Model path dan test dataset
@@ -377,7 +377,7 @@ def calculate_performance_metrics(results_df, output_dir):
     # Save metrics
     metrics_file = os.path.join(output_dir, 'performance_metrics.txt')
     with open(metrics_file, 'w') as f:
-        f.write("🇮🇩 EQTransformer Indonesia Model Performance Metrics 🌋\n")
+        f.write("EQTransformer Indonesia Model Performance Metrics 🌋\n")
         f.write("=" * 70 + "\n\n")
         
         if 'detection' in metrics:
@@ -429,7 +429,7 @@ def create_visualizations(results_df, metrics, output_dir):
     
     # Create subplot figure
     fig, axes = plt.subplots(2, 3, figsize=(18, 12))
-    fig.suptitle('🇮🇩 EQTransformer Indonesia Model Performance Analysis 🌋', fontsize=16, fontweight='bold')
+    fig.suptitle('EQTransformer Indonesia Model Performance Analysis 🌋', fontsize=16, fontweight='bold')
     
     # 1. Detection Probabilities Distribution
     ax1 = axes[0, 0]
@@ -564,7 +564,7 @@ def create_visualizations(results_df, metrics, output_dir):
 
 def main():
     """Main testing function"""
-    parser = argparse.ArgumentParser(description='🇮🇩 EQTransformer Indonesia Model Tester 🌋')
+    parser = argparse.ArgumentParser(description='EQTransformer Indonesia Model Tester 🌋')
     parser.add_argument('--model', type=str, help='Path to model file (.h5)')
     parser.add_argument('--test_csv', type=str, default='../../datasets/indonesia_valid.csv', 
                        help='Path to test CSV file')
@@ -575,7 +575,7 @@ def main():
     
     args = parser.parse_args()
     
-    print("🇮🇩 EQTransformer Indonesia Model Tester 🌋")
+    print("EQTransformer Indonesia Model Tester 🌋")
     print("=" * 60)
     
     # Setup GPU

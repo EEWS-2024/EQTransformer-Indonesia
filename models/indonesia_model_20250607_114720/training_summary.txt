@@ -1,4 +1,4 @@
-🇮🇩 EQTransformer Indonesia Training Summary 🌋
+EQTransformer Indonesia Training Summary 🌋
 ============================================================
 Dataset: Indonesia Seismic Data
 Input dimension: (30085, 3)

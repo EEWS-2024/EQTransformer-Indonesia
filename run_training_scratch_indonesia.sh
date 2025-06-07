@@ -1,9 +1,8 @@
 #!/bin/bash
-# 🇮🇩 EQTransformer Indonesia Training From Scratch Script 🌋
-# Script untuk training model EQTransformer Indonesia dari awal (from scratch)
-# Menggunakan dataset seismik Indonesia tanpa pre-trained weights
+# EQTransformer Indonesia Training From Scratch Script 🌋
+# Script untuk training EQTransformer dari awal menggunakan dataset Indonesia seismik
 
-echo "🇮🇩 EQTransformer Indonesia Training From Scratch 🌋"
+echo "EQTransformer Indonesia Training From Scratch 🌋"
 echo "=========================================================="
 
 # =============================================================================
@@ -156,16 +155,6 @@ result = train_indonesia_eqt(
 )
 
 if result:
-    print('🎉 Training from scratch completed successfully!')
-else:
-    print('❌ Training from scratch failed!')
-"
-
-# Execute Python training
-python -c "$PYTHON_CMD"
-
-# Check exit status
-if [ $? -eq 0 ]; then
     echo ""
     echo "🎉 TRAINING FROM SCRATCH BERHASIL DISELESAIKAN!"
     echo ""
@@ -177,7 +166,7 @@ if [ $? -eq 0 ]; then
     echo ""
     echo "🔥 MODEL SPECS:"
     echo "   📐 Architecture: 7-layer CNN + BiLSTM (101,395 parameters)"
-    echo "   🇮🇩 Dataset: Indonesia Seismic (1642 train + 411 valid traces)"
+    echo "   📊 Dataset: Indonesia Seismic (1642 train + 411 valid traces)"
     echo "   ⚡ Input: 30085 samples (300.8s @ 100Hz)"
     echo "   🎯 Training: FROM SCRATCH (no pre-trained weights)"
     echo ""
