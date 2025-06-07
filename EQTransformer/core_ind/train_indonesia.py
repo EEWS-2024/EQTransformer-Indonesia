@@ -9,59 +9,112 @@ Input: 30085 samples (300.8 detik @ 100Hz) - 5x lebih panjang dari default EQTra
 
 import os
 import sys
+
+# 🚀 GPU SETUP - HARUS DI AWAL SEBELUM IMPORT TENSORFLOW!
+def setup_gpu_environment_early():
+    """Setup GPU environment SEBELUM import TensorFlow"""
+    print("🔧 Early GPU setup (before TensorFlow import)...")
+    
+    # Force conda environment path
+    conda_prefix = os.environ.get('CONDA_PREFIX', '/home/mooc_parallel_2021_003/miniconda3/envs/eqt')
+    if not conda_prefix.endswith('eqt'):
+        conda_prefix = '/home/mooc_parallel_2021_003/miniconda3/envs/eqt'
+    
+    # Set conda environment variables
+    os.environ['CONDA_PREFIX'] = conda_prefix
+    os.environ['CONDA_DEFAULT_ENV'] = 'eqt'
+    
+    # Add conda env paths to Python path
+    conda_lib_path = os.path.join(conda_prefix, 'lib/python3.8/site-packages')
+    if conda_lib_path not in sys.path:
+        sys.path.insert(0, conda_lib_path)
+    
+    # Set NVIDIA CUDA paths
+    nvidia_base = os.path.join(conda_prefix, 'lib/python3.8/site-packages/nvidia')
+    
+    if os.path.exists(nvidia_base):
+        nvidia_paths = [
+            f'{nvidia_base}/cuda_runtime/lib',
+            f'{nvidia_base}/cudnn/lib', 
+            f'{nvidia_base}/cublas/lib',
+            f'{nvidia_base}/cufft/lib',
+            f'{nvidia_base}/curand/lib',
+            f'{nvidia_base}/cusolver/lib',
+            f'{nvidia_base}/cusparse/lib'
+        ]
+        
+        # Set LD_LIBRARY_PATH SEBELUM import TensorFlow
+        existing_path = os.environ.get('LD_LIBRARY_PATH', '')
+        new_path = ':'.join(nvidia_paths + [existing_path] if existing_path else nvidia_paths)
+        os.environ['LD_LIBRARY_PATH'] = new_path
+        
+        # Set TensorFlow GPU settings
+        os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
+        
+        print(f"✅ Set LD_LIBRARY_PATH with {len(nvidia_paths)} NVIDIA paths")
+        return True
+    else:
+        print(f"⚠️ NVIDIA libraries not found at: {nvidia_base}")
+        return False
+
+# Setup GPU SEBELUM import apa pun yang berhubungan dengan TensorFlow
+gpu_setup_success = setup_gpu_environment_early()
+
 import datetime
 import pandas as pd
 import h5py
 import numpy as np
 import time
+import matplotlib.pyplot as plt
+import logging
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from tqdm import tqdm
 import tensorflow as tf
 from tensorflow.keras.layers import Flatten, Dense
 from tensorflow.keras.optimizers import Adam
 
-# Auto setup GPU environment
-def setup_gpu_environment():
-    """Automatically setup GPU environment untuk EQTransformer Indonesia"""
-    print("🔧 Auto-setting up GPU environment...")
-    
-    # Set CUDA Environment Variables
-    os.environ['CUDA_HOME'] = '/usr'
-    os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
-    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'
-    os.environ['TF_XLA_FLAGS'] = '--tf_xla_enable_xla_devices=false'
-    
-    # Set LD_LIBRARY_PATH untuk NVIDIA packages
-    nvidia_paths = [
-        '/usr/lib/x86_64-linux-gnu',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cuda_runtime/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cudnn/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cublas/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cufft/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/curand/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cusolver/lib',
-        '/home/mooc_parallel_2021_003/miniconda3/envs/eqt/lib/python3.8/site-packages/nvidia/cusparse/lib'
-    ]
-    
-    existing_path = os.environ.get('LD_LIBRARY_PATH', '')
-    new_path = ':'.join(nvidia_paths + [existing_path] if existing_path else nvidia_paths)
-    os.environ['LD_LIBRARY_PATH'] = new_path
-    
-    # Test GPU availability
+# Test GPU setelah import TensorFlow
+def test_gpu_after_import():
+    """Test GPU availability setelah TensorFlow di-import"""
     try:
         gpus = tf.config.list_physical_devices('GPU')
+        
         if len(gpus) > 0:
-            print(f"✅ GPU setup berhasil! Terdeteksi {len(gpus)} GPU device(s)")
+            print(f"🚀 GPU berhasil terdeteksi! {len(gpus)} GPU device(s)")
+            
+            # Enable memory growth untuk semua GPU
+            for gpu in gpus:
+                try:
+                    tf.config.experimental.set_memory_growth(gpu, True)
+                    print(f"💾 Memory growth enabled untuk {gpu}")
+                except RuntimeError as e:
+                    print(f"⚠️ Warning memory growth: {e}")
+            
+            # Get GPU details
+            for i, gpu in enumerate(gpus):
+                try:
+                    details = tf.config.experimental.get_device_details(gpu)
+                    device_name = details.get('device_name', 'Unknown GPU')
+                    compute_cap = details.get('compute_capability', 'Unknown')
+                    print(f"  GPU {i}: {device_name} (Compute: {compute_cap})")
+                except Exception as e:
+                    print(f"  GPU {i}: {str(gpu)}")
+            
             return True
         else:
             print("⚠️ GPU tidak terdeteksi, akan menggunakan CPU")
+            if gpu_setup_success:
+                print("💡 GPU setup berhasil tapi TensorFlow tetap tidak detect GPU")
+                print("🔧 Mungkin perlu restart Python process")
             return False
+            
     except Exception as e:
-        print(f"⚠️ Error checking GPU: {e}")
+        print(f"⚠️ Error testing GPU: {e}")
         return False
 
-# Setup GPU at import time
-gpu_available = setup_gpu_environment()
+# Test GPU availability
+gpu_available = test_gpu_after_import()
 
 # Setup paths
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -619,82 +672,377 @@ def train_indonesia_eqt(
         print("✅ Manual training loop completed successfully!")
         
     else:
-        # Manual training loop untuk semua mode (karena model.fit() stuck)
-        print("🚀 STARTING MANUAL TRAINING LOOP...")
+        # Enhanced manual training loop dengan tqdm progress bars
+        print("🚀 STARTING ENHANCED TRAINING LOOP...")
         print(f"⚡ Mode: Manual batch-by-batch training (CPU optimized)")
         
-        # Limit steps per epoch untuk mencegah stuck
-        max_train_steps = min(len(training_generator), 10)  # Maksimal 10 batches per epoch
-        max_val_steps = min(len(validation_generator), 3)   # Maksimal 3 batches validation
+        # Setup logging
+        log_file = os.path.join(output_dir, 'training.log')
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            handlers=[
+                logging.FileHandler(log_file),
+                logging.StreamHandler()
+            ]
+        )
+        logger = logging.getLogger(__name__)
         
-        print(f"📊 Training strategy:")
-        print(f"   - Max training steps per epoch: {max_train_steps}")
-        print(f"   - Max validation steps: {max_val_steps}")
-        print(f"   - Total epochs: {epochs}")
+        # Limit steps per epoch untuk mencegah stuck
+        max_train_steps = min(len(training_generator), 20)  # Maksimal 20 batches per epoch
+        max_val_steps = min(len(validation_generator), 5)   # Maksimal 5 batches validation
+        
+        logger.info(f"📊 Training strategy:")
+        logger.info(f"   - Max training steps per epoch: {max_train_steps}")
+        logger.info(f"   - Max validation steps: {max_val_steps}")
+        logger.info(f"   - Total epochs: {epochs}")
         
         history = type('History', (), {})()
         history.history = {
             'loss': [],
-            'val_loss': []
+            'val_loss': [],
+            'epoch_time': []
         }
         
-        print(f"\n🚀 Starting {epochs} epochs...")
+        print(f"\n🚀 Starting {epochs} epochs with enhanced progress tracking...")
         
+        # Main training loop dengan tqdm
         for epoch in range(epochs):
-            print(f"\n=== EPOCH {epoch+1}/{epochs} ===")
+            epoch_start_time = time.time()
             
-            # Training phase
-            print(f"🔄 Training phase ({max_train_steps} batches)...")
+            # Training phase dengan tqdm progress bar
+            logger.info(f"\n📊 Epoch {epoch+1}/{epochs}")
+            
+            # Training progress bar
+            train_pbar = tqdm(
+                range(max_train_steps), 
+                desc=f"Training Epoch {epoch+1}",
+                unit="batch",
+                ncols=100,
+                leave=True
+            )
+            
             epoch_train_losses = []
             
-            for step in range(max_train_steps):
+            for step in train_pbar:
                 try:
                     batch_idx = step % len(training_generator)
                     train_batch = training_generator[batch_idx]
                     
                     train_loss = model.train_on_batch(train_batch[0], train_batch[1])
-                    epoch_train_losses.append(train_loss[0] if isinstance(train_loss, list) else train_loss)
+                    current_loss = train_loss[0] if isinstance(train_loss, list) else train_loss
+                    epoch_train_losses.append(current_loss)
                     
-                    if step % 5 == 0 or step == max_train_steps - 1:
-                        print(f"   Step {step+1}/{max_train_steps}: loss={train_loss[0] if isinstance(train_loss, list) else train_loss:.4f}")
-                        
+                    # Update progress bar dengan loss info
+                    avg_loss = np.mean(epoch_train_losses)
+                    train_pbar.set_postfix({
+                        'Loss': f'{current_loss:.4f}',
+                        'Avg': f'{avg_loss:.4f}'
+                    })
+                    
                 except Exception as e:
-                    print(f"   ❌ Training step {step+1} failed: {e}")
+                    logger.error(f"Training step {step+1} failed: {e}")
                     continue
             
-            # Validation phase
-            print(f"🔍 Validation phase ({max_val_steps} batches)...")
+            train_pbar.close()
+            
+            # Validation phase dengan progress bar
+            val_pbar = tqdm(
+                range(max_val_steps), 
+                desc=f"Validation Epoch {epoch+1}",
+                unit="batch",
+                ncols=100,
+                leave=False
+            )
+            
             epoch_val_losses = []
             
-            for step in range(max_val_steps):
+            for step in val_pbar:
                 try:
                     batch_idx = step % len(validation_generator)
                     val_batch = validation_generator[batch_idx]
                     
                     val_loss = model.test_on_batch(val_batch[0], val_batch[1])
-                    epoch_val_losses.append(val_loss[0] if isinstance(val_loss, list) else val_loss)
+                    current_val_loss = val_loss[0] if isinstance(val_loss, list) else val_loss
+                    epoch_val_losses.append(current_val_loss)
+                    
+                    # Update validation progress bar
+                    avg_val_loss = np.mean(epoch_val_losses)
+                    val_pbar.set_postfix({
+                        'Val Loss': f'{current_val_loss:.4f}',
+                        'Avg': f'{avg_val_loss:.4f}'
+                    })
                     
                 except Exception as e:
-                    print(f"   ❌ Validation step {step+1} failed: {e}")
+                    logger.error(f"Validation step {step+1} failed: {e}")
                     continue
             
+            val_pbar.close()
+            
             # Epoch summary
+            epoch_time = time.time() - epoch_start_time
             avg_train_loss = np.mean(epoch_train_losses) if epoch_train_losses else 0.0
             avg_val_loss = np.mean(epoch_val_losses) if epoch_val_losses else 0.0
             
             history.history['loss'].append(avg_train_loss)
             history.history['val_loss'].append(avg_val_loss)
+            history.history['epoch_time'].append(epoch_time)
             
-            print(f"✅ Epoch {epoch+1} completed:")
-            print(f"   - Training loss: {avg_train_loss:.4f}")
-            print(f"   - Validation loss: {avg_val_loss:.4f}")
+            # Log epoch results
+            logger.info(f"   ✅ Epoch {epoch+1} - Avg Training Loss: {avg_train_loss:.6f}")
+            logger.info(f"   ✅ Epoch {epoch+1} - Avg Validation Loss: {avg_val_loss:.6f}")
+            logger.info(f"   ⏰ Epoch {epoch+1} - Time: {epoch_time:.2f}s")
             
             # Simple early stopping
             if epoch > 2 and avg_val_loss > history.history['val_loss'][-2]:
-                print(f"🛑 Early stopping: validation loss increased")
+                logger.info(f"🛑 Early stopping: validation loss increased")
                 break
         
-        print("✅ Manual training loop completed successfully!")
+        logger.info("✅ Enhanced training loop completed successfully!")
+        
+        # Testing Phase - NEW FEATURE!
+        print(f"\n🔍 TESTING MODEL ON VALIDATION DATA...")
+        logger.info("🔍 Starting model testing phase...")
+        
+        test_results = []
+        test_pbar = tqdm(
+            range(min(len(validation_generator), 10)), 
+            desc="Testing Model",
+            unit="batch",
+            ncols=100
+        )
+        
+        for batch_idx in test_pbar:
+            try:
+                val_batch = validation_generator[batch_idx]
+                predictions = model.predict(val_batch[0], verbose=0)
+                
+                # Get ground truth labels
+                true_detector = val_batch[1]['detector']
+                true_picker_P = val_batch[1]['picker_P']  
+                true_picker_S = val_batch[1]['picker_S']
+                
+                # Extract predictions for each sample in batch
+                batch_size = val_batch[0]['input'].shape[0]
+                for sample_idx in range(batch_size):
+                    
+                    # Predictions
+                    pred_detector = predictions[0][sample_idx].flatten()
+                    pred_picker_P = predictions[1][sample_idx].flatten()
+                    pred_picker_S = predictions[2][sample_idx].flatten()
+                    
+                    # Ground truth
+                    gt_detector = true_detector[sample_idx].flatten()
+                    gt_picker_P = true_picker_P[sample_idx].flatten()
+                    gt_picker_S = true_picker_S[sample_idx].flatten()
+                    
+                    # Find peak indices (argmax)
+                    predicted_P_index = int(np.argmax(pred_picker_P))
+                    predicted_S_index = int(np.argmax(pred_picker_S))
+                    
+                    # Find ground truth indices (argmax dari gaussian labels)
+                    true_P_index = int(np.argmax(gt_picker_P))
+                    true_S_index = int(np.argmax(gt_picker_S))
+                    
+                    # Calculate errors (dalam samples)
+                    P_error_samples = predicted_P_index - true_P_index
+                    S_error_samples = predicted_S_index - true_S_index
+                    
+                    # Convert to time (assuming 100 Hz sampling)
+                    sampling_rate = 100  # Hz
+                    P_error_seconds = P_error_samples / sampling_rate
+                    S_error_seconds = S_error_samples / sampling_rate
+                    
+                    # Check if detection is significant (above threshold)
+                    detector_threshold = 0.5
+                    P_threshold = 0.3
+                    S_threshold = 0.3
+                    
+                    is_earthquake_detected = np.max(pred_detector) > detector_threshold
+                    is_P_detected = np.max(pred_picker_P) > P_threshold  
+                    is_S_detected = np.max(pred_picker_S) > S_threshold
+                    
+                    # Ground truth analysis
+                    has_earthquake = np.max(gt_detector) > 0.1  # Ground truth threshold
+                    has_P_wave = np.max(gt_picker_P) > 0.1
+                    has_S_wave = np.max(gt_picker_S) > 0.1
+                    
+                    test_results.append({
+                        # Identifiers
+                        'batch_idx': batch_idx,
+                        'sample_idx': sample_idx,
+                        
+                        # Detection predictions (max values)
+                        'detector_max': float(np.max(pred_detector)),
+                        'detector_mean': float(np.mean(pred_detector)),
+                        'picker_P_max': float(np.max(pred_picker_P)),
+                        'picker_P_mean': float(np.mean(pred_picker_P)),
+                        'picker_S_max': float(np.max(pred_picker_S)),
+                        'picker_S_mean': float(np.mean(pred_picker_S)),
+                        
+                        # Peak locations (indices)
+                        'predicted_P_index': predicted_P_index,
+                        'predicted_S_index': predicted_S_index,
+                        'true_P_index': true_P_index,
+                        'true_S_index': true_S_index,
+                        
+                        # Time locations (seconds from start)
+                        'predicted_P_time_sec': predicted_P_index / sampling_rate,
+                        'predicted_S_time_sec': predicted_S_index / sampling_rate,
+                        'true_P_time_sec': true_P_index / sampling_rate,
+                        'true_S_time_sec': true_S_index / sampling_rate,
+                        
+                        # Errors
+                        'P_error_samples': P_error_samples,
+                        'S_error_samples': S_error_samples,
+                        'P_error_seconds': P_error_seconds,
+                        'S_error_seconds': S_error_seconds,
+                        'P_error_abs_seconds': abs(P_error_seconds),
+                        'S_error_abs_seconds': abs(S_error_seconds),
+                        
+                        # Detection flags
+                        'is_earthquake_detected': is_earthquake_detected,
+                        'is_P_detected': is_P_detected,
+                        'is_S_detected': is_S_detected,
+                        'has_earthquake': has_earthquake,
+                        'has_P_wave': has_P_wave,
+                        'has_S_wave': has_S_wave,
+                        
+                        # Accuracy flags
+                        'earthquake_detection_correct': (is_earthquake_detected == has_earthquake),
+                        'P_detection_correct': (is_P_detected == has_P_wave),
+                        'S_detection_correct': (is_S_detected == has_S_wave)
+                    })
+                
+                test_pbar.set_postfix({'Samples': len(test_results)})
+                
+            except Exception as e:
+                logger.error(f"Testing batch {batch_idx} failed: {e}")
+                continue
+        
+        test_pbar.close()
+        
+        # Save detailed test results
+        if test_results:
+            test_results_dir = os.path.join(output_dir, 'test_results')
+            os.makedirs(test_results_dir, exist_ok=True)
+            
+            test_df = pd.DataFrame(test_results)
+            test_csv_path = os.path.join(test_results_dir, 'validation_predictions_detailed.csv')
+            test_df.to_csv(test_csv_path, index=False)
+            
+            # Create summary statistics
+            summary_stats = {
+                'total_samples': len(test_df),
+                'earthquake_detection_accuracy': test_df['earthquake_detection_correct'].mean(),
+                'P_detection_accuracy': test_df['P_detection_correct'].mean(),
+                'S_detection_accuracy': test_df['S_detection_correct'].mean(),
+                'mean_P_error_seconds': test_df['P_error_abs_seconds'].mean(),
+                'mean_S_error_seconds': test_df['S_error_abs_seconds'].mean(),
+                'median_P_error_seconds': test_df['P_error_abs_seconds'].median(),
+                'median_S_error_seconds': test_df['S_error_abs_seconds'].median(),
+                'P_error_std_seconds': test_df['P_error_seconds'].std(),
+                'S_error_std_seconds': test_df['S_error_seconds'].std()
+            }
+            
+            # Save summary
+            summary_df = pd.DataFrame([summary_stats])
+            summary_csv_path = os.path.join(test_results_dir, 'test_summary.csv')
+            summary_df.to_csv(summary_csv_path, index=False)
+            
+            logger.info(f"📊 Detailed test results saved to: {test_csv_path}")
+            logger.info(f"📊 Test summary saved to: {summary_csv_path}")
+            logger.info(f"📊 Total test samples: {len(test_results)}")
+            
+            # Print key metrics
+            print(f"✅ Test results saved: {len(test_results)} samples")
+            print(f"📊 Key Metrics:")
+            print(f"   🎯 Earthquake Detection Accuracy: {summary_stats['earthquake_detection_accuracy']:.3f}")
+            print(f"   🎯 P-wave Detection Accuracy: {summary_stats['P_detection_accuracy']:.3f}")
+            print(f"   🎯 S-wave Detection Accuracy: {summary_stats['S_detection_accuracy']:.3f}")
+            print(f"   ⏰ Mean P-wave Error: {summary_stats['mean_P_error_seconds']:.3f} seconds")
+            print(f"   ⏰ Mean S-wave Error: {summary_stats['mean_S_error_seconds']:.3f} seconds")
+        
+        # Export Training History - NEW FEATURE!
+        print(f"\n📊 EXPORTING TRAINING HISTORY...")
+        
+        # Save training history to CSV
+        history_df = pd.DataFrame({
+            'epoch': range(1, len(history.history['loss']) + 1),
+            'train_loss': history.history['loss'],
+            'val_loss': history.history['val_loss'],
+            'epoch_time_seconds': history.history['epoch_time']
+        })
+        
+        history_csv_path = os.path.join(output_dir, 'training_history.csv')
+        history_df.to_csv(history_csv_path, index=False)
+        logger.info(f"📊 Training history saved to: {history_csv_path}")
+        
+        # Plot loss curves - NEW FEATURE!
+        print(f"📈 Creating loss curves plot...")
+        plt.figure(figsize=(12, 8))
+        
+        # Plot 1: Loss curves
+        plt.subplot(2, 2, 1)
+        plt.plot(history_df['epoch'], history_df['train_loss'], 'b-', label='Training Loss', linewidth=2)
+        plt.plot(history_df['epoch'], history_df['val_loss'], 'r-', label='Validation Loss', linewidth=2)
+        plt.title('Training & Validation Loss', fontsize=14, fontweight='bold')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.grid(True, alpha=0.3)
+        
+        # Plot 2: Training time per epoch
+        plt.subplot(2, 2, 2)
+        plt.plot(history_df['epoch'], history_df['epoch_time_seconds'], 'g-', linewidth=2)
+        plt.title('Training Time per Epoch', fontsize=14, fontweight='bold')
+        plt.xlabel('Epoch')
+        plt.ylabel('Time (seconds)')
+        plt.grid(True, alpha=0.3)
+        
+        # Plot 3: Loss difference
+        plt.subplot(2, 2, 3)
+        loss_diff = history_df['val_loss'] - history_df['train_loss']
+        plt.plot(history_df['epoch'], loss_diff, 'm-', linewidth=2)
+        plt.title('Validation - Training Loss (Overfitting Indicator)', fontsize=14, fontweight='bold')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss Difference')
+        plt.axhline(y=0, color='k', linestyle='--', alpha=0.5)
+        plt.grid(True, alpha=0.3)
+        
+        # Plot 4: Summary stats
+        plt.subplot(2, 2, 4)
+        plt.text(0.1, 0.8, f"EQTransformer Indonesia Training", fontsize=16, fontweight='bold')
+        plt.text(0.1, 0.7, f"Total Epochs: {len(history_df)}", fontsize=12)
+        plt.text(0.1, 0.6, f"Final Train Loss: {history_df['train_loss'].iloc[-1]:.6f}", fontsize=12)
+        plt.text(0.1, 0.5, f"Final Val Loss: {history_df['val_loss'].iloc[-1]:.6f}", fontsize=12)
+        plt.text(0.1, 0.4, f"Total Time: {sum(history_df['epoch_time_seconds']):.1f}s", fontsize=12)
+        plt.text(0.1, 0.3, f"Model: 7-layer CNN + BiLSTM", fontsize=12)
+        plt.text(0.1, 0.2, f"Input Size: {input_dim[0]} samples", fontsize=12)
+        plt.axis('off')
+        
+        plt.tight_layout()
+        
+        # Save plot
+        plot_path = os.path.join(output_dir, 'loss_curves.png')
+        plt.savefig(plot_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        logger.info(f"📈 Loss curves plot saved to: {plot_path}")
+        print(f"✅ Loss curves saved: {plot_path}")
+        
+        print(f"\n📋 TRAINING SUMMARY:")
+        print(f"   📊 Epochs completed: {len(history_df)}")
+        print(f"   🎯 Final training loss: {history_df['train_loss'].iloc[-1]:.6f}")
+        print(f"   🎯 Final validation loss: {history_df['val_loss'].iloc[-1]:.6f}")
+        print(f"   ⏰ Total training time: {sum(history_df['epoch_time_seconds']):.1f} seconds")
+        print(f"   📝 Training log: {log_file}")
+        print(f"   📊 History CSV: {history_csv_path}")
+        print(f"   📈 Loss plot: {plot_path}")
+        if test_results:
+            print(f"   🔍 Test results: {test_csv_path}")
+        
+        logger.info("🎉 All training outputs successfully saved!")
     
     end_time = time.time()
     training_time = (end_time - start_time) / 60
