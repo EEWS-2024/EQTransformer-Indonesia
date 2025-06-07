@@ -1,0 +1,114 @@
+2025-06-07 08:51:13,172 - INFO - 📊 Training strategy:
+2025-06-07 08:51:13,172 - INFO -    - Max training steps per epoch: 20
+2025-06-07 08:51:13,172 - INFO -    - Max validation steps: 5
+2025-06-07 08:51:13,172 - INFO -    - Total epochs: 10
+2025-06-07 08:51:13,203 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:18,507 - ERROR - Training step 3 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:19,849 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:19,903 - ERROR - Training step 6 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:19,945 - ERROR - Training step 7 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:21,248 - ERROR - Training step 9 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:21,289 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:23,799 - ERROR - Training step 13 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:25,109 - ERROR - Training step 15 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:25,151 - ERROR - Training step 16 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:25,179 - ERROR - Training step 17 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:26,477 - ERROR - Training step 19 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:31,620 - INFO - Epoch 1 - Training: 0.357251, Validation: 0.441518, Time: 18.45s
+2025-06-07 08:51:31,621 - INFO - Validation loss trend: improving
+2025-06-07 08:51:31,676 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:35,362 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:35,404 - ERROR - Training step 6 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:39,116 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:42,758 - ERROR - Training step 14 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:42,799 - ERROR - Training step 15 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:42,841 - ERROR - Training step 16 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:45,316 - ERROR - Training step 19 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:45,344 - ERROR - Training step 20 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:48,221 - INFO - Epoch 2 - Training: 0.089070, Validation: 0.103724, Time: 16.60s
+2025-06-07 08:51:48,221 - INFO - Validation loss trend: improving
+2025-06-07 08:51:48,278 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:50,757 - ERROR - Training step 4 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:50,786 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:50,826 - ERROR - Training step 6 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:50,869 - ERROR - Training step 7 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:51:53,347 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:01,997 - ERROR - Training step 18 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:07,337 - INFO - Epoch 3 - Training: 0.075375, Validation: 0.073373, Time: 19.12s
+2025-06-07 08:52:07,337 - INFO - Validation loss trend: improving
+2025-06-07 08:52:07,381 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:07,421 - ERROR - Training step 2 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:08,696 - ERROR - Training step 4 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:14,893 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:17,343 - ERROR - Training step 13 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:18,603 - ERROR - Training step 15 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:22,286 - ERROR - Training step 19 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:22,327 - ERROR - Training step 20 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:25,236 - INFO - Epoch 4 - Training: 0.081930, Validation: 0.068357, Time: 17.90s
+2025-06-07 08:52:25,236 - INFO - Validation loss trend: improving
+2025-06-07 08:52:25,266 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:25,306 - ERROR - Training step 2 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:27,848 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:29,130 - ERROR - Training step 7 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:34,007 - ERROR - Training step 12 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:35,309 - ERROR - Training step 14 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:37,812 - ERROR - Training step 17 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:39,095 - ERROR - Training step 19 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:43,182 - INFO - Epoch 5 - Training: 0.060871, Validation: 0.067016, Time: 17.95s
+2025-06-07 08:52:43,182 - INFO - Validation loss trend: improving
+2025-06-07 08:52:44,489 - ERROR - Training step 2 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:45,744 - ERROR - Training step 4 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:46,988 - ERROR - Training step 6 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:47,029 - ERROR - Training step 7 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:47,071 - ERROR - Training step 8 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:48,320 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:48,361 - ERROR - Training step 11 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:49,633 - ERROR - Training step 13 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:55,826 - ERROR - Training step 19 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:52:59,925 - INFO - Epoch 6 - Training: 0.082977, Validation: 0.063500, Time: 16.74s
+2025-06-07 08:52:59,925 - INFO - Validation loss trend: improving
+2025-06-07 08:53:04,812 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:12,141 - ERROR - Training step 12 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:12,183 - ERROR - Training step 13 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:13,473 - ERROR - Training step 15 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:13,501 - ERROR - Training step 16 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:13,543 - ERROR - Training step 17 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:13,571 - ERROR - Training step 18 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:18,897 - INFO - Epoch 7 - Training: 0.065709, Validation: 0.061138, Time: 18.97s
+2025-06-07 08:53:18,897 - INFO - Validation loss trend: improving
+2025-06-07 08:53:18,939 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:18,980 - ERROR - Training step 2 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:20,224 - ERROR - Training step 4 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:22,710 - ERROR - Training step 7 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:22,738 - ERROR - Training step 8 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:22,779 - ERROR - Training step 9 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:22,820 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:24,036 - ERROR - Training step 12 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:25,303 - ERROR - Training step 14 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:26,564 - ERROR - Training step 16 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:34,334 - INFO - Epoch 8 - Training: 0.067574, Validation: 0.056310, Time: 15.44s
+2025-06-07 08:53:34,334 - INFO - Validation loss trend: improving
+2025-06-07 08:53:45,342 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:46,622 - ERROR - Training step 12 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:50,361 - ERROR - Training step 16 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:58,128 - INFO - Epoch 9 - Training: 0.060160, Validation: 0.051839, Time: 23.79s
+2025-06-07 08:53:58,128 - INFO - Validation loss trend: improving
+2025-06-07 08:53:58,170 - ERROR - Training step 1 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:59,485 - ERROR - Training step 3 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:59,514 - ERROR - Training step 4 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:53:59,581 - ERROR - Training step 5 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:03,314 - ERROR - Training step 9 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:03,343 - ERROR - Training step 10 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:04,649 - ERROR - Training step 12 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:05,872 - ERROR - Training step 14 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:09,576 - ERROR - Training step 18 failed: 'numpy.bool_' object is not iterable
+2025-06-07 08:54:14,870 - INFO - Epoch 10 - Training: 0.045737, Validation: 0.051642, Time: 16.74s
+2025-06-07 08:54:14,870 - INFO - Validation loss trend: improving
+2025-06-07 08:54:14,870 - INFO - ✅ Enhanced training loop completed successfully!
+2025-06-07 08:54:14,871 - INFO - 🔍 Starting model testing phase...
+2025-06-07 08:54:21,894 - INFO - 📊 Detailed test results saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085113/test_results/validation_predictions_detailed.csv
+2025-06-07 08:54:21,894 - INFO - 📊 Test summary saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085113/test_results/test_summary.csv
+2025-06-07 08:54:21,894 - INFO - 📊 Total test samples: 40
+2025-06-07 08:54:21,895 - INFO - 📊 Training history saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085113/training_history.csv
+2025-06-07 08:54:23,103 - INFO - 📈 Loss curves plot saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085113/loss_curves.png
+2025-06-07 08:54:23,104 - INFO - 🎉 All training outputs successfully saved!

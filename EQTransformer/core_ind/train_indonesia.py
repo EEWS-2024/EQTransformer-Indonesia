@@ -224,6 +224,7 @@ def train_indonesia_eqt(
     cnn_blocks=3,
     lstm_blocks=1,
     augmentation=True,
+    patience=3,
     use_combined_data=False,
     debug_traces=None
 ):
@@ -261,6 +262,19 @@ def train_indonesia_eqt(
         
         ✅ KEUNTUNGAN: Model lebih robust, generalisasi lebih baik
         ⚠️ COST: Training 2x lebih lama, tapi kualitas model meningkat
+        
+    patience : int (default=3)
+        Early stopping patience - berapa epochs menunggu sebelum stop jika validation loss tidak membaik.
+        
+        🛑 EARLY STOPPING STRATEGY:
+        • patience=1: Sangat agresif - stop begitu val_loss naik
+        • patience=3: Balanced - tunggu 3 epochs tanpa improvement  
+        • patience=5-10: Konservatif - beri kesempatan lebih untuk recovery
+        • patience=0: Disable automatic early stopping
+        
+        ⚙️ IMPLEMENTATION:
+        - Keras EarlyStopping: patience epochs tanpa improvement
+        - Simple early stopping: langsung stop jika val_loss naik (jika patience <= 2)
         
     use_combined_data : bool (default=False)
         Gabungkan train+valid atau pisah
@@ -344,6 +358,7 @@ def train_indonesia_eqt(
     print(f"   Input dimension: {input_dim} (300.8 detik)")
     print(f"   Batch size: {batch_size}")
     print(f"   Epochs: {epochs}")
+    print(f"   Patience: {patience} epochs")
     print(f"   CNN blocks: {cnn_blocks}")
     print(f"   LSTM blocks: {lstm_blocks}")
     print(f"   Augmentation: {augmentation}")
@@ -570,7 +585,7 @@ def train_indonesia_eqt(
     callbacks = [
         EarlyStopping(
             monitor='val_loss',
-            patience=max(3, epochs // 3),  # Adaptive patience
+            patience=patience,  # Gunakan parameter patience dari user
             verbose=1,
             restore_best_weights=True
         ),
@@ -582,7 +597,7 @@ def train_indonesia_eqt(
         ),
         ReduceLROnPlateau(
             factor=0.5,
-            patience=max(2, epochs // 4),
+            patience=max(1, patience // 2),  # LR reduction patience = setengah dari early stopping patience
             min_lr=1e-6,
             verbose=1
         ),
@@ -710,7 +725,7 @@ def train_indonesia_eqt(
         max_train_steps = min(len(training_generator), 20)  # Maksimal 20 batches per epoch
         max_val_steps = min(len(validation_generator), 5)   # Maksimal 5 batches validation
         
-        # Log ke file saja (tidak ke console)
+        # Log ke file
         logger.info(f"📊 Training strategy:")
         logger.info(f"   - Max training steps per epoch: {max_train_steps}")
         logger.info(f"   - Max validation steps: {max_val_steps}")
@@ -798,11 +813,9 @@ def train_indonesia_eqt(
             # Log ke file
             logger.info(f"Epoch {epoch+1} - Training: {avg_train_loss:.6f}, Validation: {avg_val_loss:.6f}, Time: {epoch_time:.2f}s")
             
-            # Simple early stopping
-            if epoch > 2 and avg_val_loss > history.history['val_loss'][-2]:
-                print(f"🛑 Early stopping: validation loss increased")
-                logger.info(f"🛑 Early stopping: validation loss increased")
-                break
+            # Note: Early stopping dihandle oleh Keras EarlyStopping callback
+            # Tidak perlu manual early stopping yang bisa bikin bug
+            logger.info(f"Validation loss trend: {'improving' if len(history.history['val_loss']) < 2 or avg_val_loss < history.history['val_loss'][-2] else 'stable/worsening'}")
         
         print(f"✅ Training completed!")
         logger.info("✅ Enhanced training loop completed successfully!")
@@ -1074,7 +1087,7 @@ def train_indonesia_eqt(
     print("📝 Writing training summary...")
     with open(os.path.join(output_dir, 'training_summary.txt'), 'w') as f:
         f.write("🇮🇩 EQTransformer Indonesia Training Summary 🌋\n")
-        f.write("="*60 + "\n")  
+        f.write("="*60 + "\n")
         f.write(f"Dataset: Indonesia Seismic Data\n")
         f.write(f"Input dimension: {input_dim}\n")
         f.write(f"Training traces: {len(training_traces)}\n")
@@ -1104,45 +1117,64 @@ def train_indonesia_eqt(
 
 if __name__ == "__main__":
     """
-    Mode training:
-    1. Quick test: batch_size=2, epochs=3
-    2. Small training: batch_size=4, epochs=10  
-    3. Full training: batch_size=8, epochs=50
+    🇮🇩 EQTransformer Indonesia Training Script 🌋
+    
+    Script ini dipanggil oleh run_gpu_training.sh dengan parameter yang sudah dikonfigurasi.
+    Untuk training langsung, gunakan: ./run_gpu_training.sh
+    
+    Untuk custom parameters, edit variabel di bagian atas run_gpu_training.sh:
+    - BATCH_SIZE: Ukuran batch (2-8 recommended)
+    - EPOCHS: Jumlah epochs
+    - AUGMENTATION: true/false
+    - PATIENCE: Early stopping patience  
+    - COMBINED_DATA: true/false
+    - DEBUG_TRACES: kosong untuk full data, angka untuk limit traces
     """
     
-    print("🇮🇩 PILIHAN MODE TRAINING 🌋")
+    print("🇮🇩 EQTransformer Indonesia Training 🌋")
     print(f"🖥️ Hardware: {'GPU' if gpu_available else 'CPU'}")
-    print("1. Quick Test (4 batch, 1 epoch) - 5 menit ⚡")
-    print("2. Small Training (4 batch, 10 epochs) - 1 jam")  
-    print("3. Full Training (8 batch, 50 epochs) - 6 jam")
-    print("4. Debug Test (1 trace, 1 epoch) - 2 menit 🐛")
+    print("📝 Note: Script ini biasanya dipanggil dari run_gpu_training.sh")
+    print("⚙️ Untuk custom parameters, edit run_gpu_training.sh")
+    print()
+    
+    # Fallback menu untuk direct execution (compatibility)
+    print("🔧 DIRECT EXECUTION MODE:")
+    print("1. Quick Test (4 batch, 1 epoch, patience=2)")
+    print("2. Small Training (4 batch, 10 epochs, patience=3)")  
+    print("3. Full Training (8 batch, 50 epochs, patience=10)")
+    print("4. Debug Test (1 trace, 1 epoch, patience=1)")
     print("5. Custom parameters")
     
     choice = input("\nPilih mode (1/2/3/4/5): ").strip()
     
     if choice == "1":
-        result = train_indonesia_eqt(batch_size=4, epochs=1, augmentation=False)
+        result = train_indonesia_eqt(batch_size=4, epochs=1, patience=2, augmentation=False)
     elif choice == "2":
-        result = train_indonesia_eqt(batch_size=4, epochs=10, augmentation=False)
+        result = train_indonesia_eqt(batch_size=4, epochs=10, patience=3, augmentation=False)
     elif choice == "3":
-        result = train_indonesia_eqt(batch_size=8, epochs=50, augmentation=False, use_combined_data=True)
+        result = train_indonesia_eqt(batch_size=8, epochs=50, patience=10, augmentation=True, use_combined_data=True)
     elif choice == "4":
         print("🐛 DEBUG MODE: Testing dengan 1 trace saja")
-        print("⚡ Ultra-minimal setup untuk test functionality")
-        result = train_indonesia_eqt(batch_size=1, epochs=1, augmentation=False, debug_traces=1)  # Cuma 1 trace!
+        result = train_indonesia_eqt(batch_size=1, epochs=1, patience=1, augmentation=False, debug_traces=1)
     elif choice == "5":
         batch_size = int(input("Batch size (default 4): ") or "4")
         epochs = int(input("Epochs (default 10): ") or "10")
+        patience = int(input("Patience (default 3): ") or "3")
         augmentation = input("Augmentation (y/n, default y): ").strip().lower() != 'n'
         combined = input("Use combined data (y/n, default n): ").strip().lower() == 'y'
         debug = input("Debug traces limit (default None): ").strip()
         debug_traces = int(debug) if debug else None
-        result = train_indonesia_eqt(batch_size=batch_size, epochs=epochs, 
-                                   augmentation=augmentation, use_combined_data=combined,
-                                   debug_traces=debug_traces)
+        result = train_indonesia_eqt(
+            batch_size=batch_size, 
+            epochs=epochs, 
+            patience=patience,
+            augmentation=augmentation, 
+            use_combined_data=combined,
+            debug_traces=debug_traces
+        )
     else:
         print("Mode default: Small Training")
-        result = train_indonesia_eqt(batch_size=4, epochs=10, augmentation=True)
+        result = train_indonesia_eqt(batch_size=4, epochs=10, patience=3, augmentation=False)
     
     if result:
         output_dir, history, model = result
