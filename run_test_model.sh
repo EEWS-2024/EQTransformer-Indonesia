@@ -29,8 +29,25 @@ TEST_HDF5="../../datasets/indonesia_valid.hdf5"
 # Testing parameters
 BATCH_SIZE=32
 
-# Output directory (kosong = auto generate dengan timestamp)
-OUTPUT_DIR=""
+# Generate timestamp for unique output directory
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+# Auto-detect latest model if not specified
+if [ -z "$MODEL_PATH" ]; then
+    # Priority: final_model.h5 (full model) over model_weights.h5 (weights only)
+    MODEL_PATH=$(find models/ -name "final_model.h5" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2-)
+    
+    if [ -z "$MODEL_PATH" ]; then
+        # Fallback to any .h5 file if no final_model.h5 found
+        MODEL_PATH=$(find models/ -name "*.h5" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2-)
+    fi
+    
+    echo "🔍 Auto-detected model: $MODEL_PATH"
+fi
+
+# Extract model name for output directory
+MODEL_BASENAME=$(basename "$MODEL_PATH" .h5)
+OUTPUT_DIR="test_results/test_${MODEL_BASENAME}_${TIMESTAMP}"
 
 # =============================================================================
 # ADVANCED CONFIGURATION
@@ -43,6 +60,27 @@ OUTPUT_DIR=""
 # Untuk testing dengan batch size berbeda
 # BATCH_SIZE=16   # Untuk GPU dengan memory terbatas
 # BATCH_SIZE=64   # Untuk GPU dengan memory besar
+
+# =============================================================================
+# AUTO-DETECTION DAN VALIDATION
+# =============================================================================
+
+# Check if model exists
+if [ ! -f "$MODEL_PATH" ]; then
+    echo "❌ Model tidak ditemukan: $MODEL_PATH"
+    echo "   Available models:"
+    find models/ -name "*.h5" | head -5
+    exit 1
+fi
+
+echo "📋 KONFIGURASI TEST:"
+echo "   Model: $MODEL_PATH"
+echo "   Test dataset: Indonesia valid (411 traces, 30085 samples)"
+echo "   Input shape: (30085, 3) - Indonesia-trained model compatible"
+echo "   Batch size: $BATCH_SIZE"
+echo "   Output directory: $OUTPUT_DIR"
+echo "   Purpose: Evaluate Indonesia-trained model performance"
+echo ""
 
 # =============================================================================
 # EXECUTION - JANGAN EDIT BAGIAN INI
