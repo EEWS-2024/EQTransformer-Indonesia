@@ -1,0 +1,153 @@
+2025-06-07 09:53:34,605 - INFO - 📊 Training strategy:
+2025-06-07 09:53:34,605 - INFO -    - Max training steps per epoch: 51
+2025-06-07 09:53:34,605 - INFO -    - Max validation steps: 12
+2025-06-07 09:53:34,605 - INFO -    - Total epochs: 2
+2025-06-07 09:53:34,605 - INFO -    - Training coverage: 100.0%
+2025-06-07 09:53:34,605 - INFO -    - Validation coverage: 100.0%
+2025-06-07 09:53:34,607 - ERROR - Training step 1 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 2 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 3 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 4 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 5 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 6 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 7 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 8 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,607 - ERROR - Training step 9 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 10 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 11 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 12 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 13 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 14 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 15 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 16 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 17 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 18 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 19 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 20 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 21 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,608 - ERROR - Training step 22 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 23 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 24 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 25 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 26 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 27 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 28 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 29 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 30 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 31 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 32 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 33 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 34 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,609 - ERROR - Training step 35 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 36 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 37 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 38 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 39 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 40 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 41 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 42 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 43 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 44 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 45 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 46 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 47 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 48 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 49 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 50 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,610 - ERROR - Training step 51 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 1 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 2 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 3 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 4 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 5 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 6 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 7 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 8 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 9 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 10 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 11 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - ERROR - Validation step 12 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,611 - INFO - Epoch 1 - Training: 0.000000, Validation: 0.000000, Time: 0.01s
+2025-06-07 09:53:34,611 - INFO - Validation loss trend: improving
+2025-06-07 09:53:34,612 - ERROR - Training step 1 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 2 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 3 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 4 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 5 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 6 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 7 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 8 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 9 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 10 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 11 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 12 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 13 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 14 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 15 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 16 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 17 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 18 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,612 - ERROR - Training step 19 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 20 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 21 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 22 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 23 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 24 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 25 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 26 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 27 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 28 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 29 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 30 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 31 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 32 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 33 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 34 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 35 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 36 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 37 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 38 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 39 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 40 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 41 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 42 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 43 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,613 - ERROR - Training step 44 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 45 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 46 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 47 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 48 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 49 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 50 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Training step 51 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 1 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 2 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 3 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 4 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 5 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 6 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 7 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 8 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 9 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,614 - ERROR - Validation step 10 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Validation step 11 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Validation step 12 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - INFO - Epoch 2 - Training: 0.000000, Validation: 0.000000, Time: 0.00s
+2025-06-07 09:53:34,615 - INFO - Validation loss trend: stable/worsening
+2025-06-07 09:53:34,615 - INFO - ✅ Enhanced training loop completed successfully!
+2025-06-07 09:53:34,615 - INFO - 🔍 Starting model testing phase...
+2025-06-07 09:53:34,615 - ERROR - Testing batch 0 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 1 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 2 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 3 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 4 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 5 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 6 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 7 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,615 - ERROR - Testing batch 8 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,616 - ERROR - Testing batch 9 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,616 - ERROR - Testing batch 10 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,616 - ERROR - Testing batch 11 failed: 'tuple' object cannot be interpreted as an integer
+2025-06-07 09:53:34,618 - INFO - 📊 Training history saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_095334/training_history.csv
+2025-06-07 09:53:35,769 - INFO - 📈 Loss curves plot saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_095334/loss_curves.png
+2025-06-07 09:53:35,770 - INFO - 🎉 All training outputs successfully saved!

@@ -1,0 +1,6 @@
+2025-06-07 09:28:06,891 - INFO - 📊 Training strategy:
+2025-06-07 09:28:06,892 - INFO -    - Max training steps per epoch: 328
+2025-06-07 09:28:06,892 - INFO -    - Max validation steps: 82
+2025-06-07 09:28:06,892 - INFO -    - Total epochs: 2
+2025-06-07 09:28:06,892 - INFO -    - Training coverage: 100.0%
+2025-06-07 09:28:06,892 - INFO -    - Validation coverage: 100.0%
