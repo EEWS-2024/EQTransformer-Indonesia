@@ -11,8 +11,8 @@ echo "=========================================================="
 # =============================================================================
 
 # Training parameters
-BATCH_SIZE=32       # Batch size untuk training (32 optimal untuk GPU)
-EPOCHS=10           # Number of epochs
+BATCH_SIZE=64       
+EPOCHS=1           # Number of epochs
 AUGMENTATION=false  # Data augmentation (true/false)
 PATIENCE=3          # Early stopping patience
 COMBINED_DATA=false # Gunakan combined train+valid (true) atau terpisah (false)
