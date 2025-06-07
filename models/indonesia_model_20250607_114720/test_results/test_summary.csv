@@ -1,0 +1,2 @@
+total_samples,earthquake_detection_accuracy,P_detection_accuracy,S_detection_accuracy,mean_P_error_seconds,mean_S_error_seconds,median_P_error_seconds,median_S_error_seconds,P_error_std_seconds,S_error_std_seconds
+384,0.9947916666666666,0.0,0.0026041666666666665,179.25458333333327,9.134869791666667,270.83,0.785,125.84586768123489,32.977442194633056

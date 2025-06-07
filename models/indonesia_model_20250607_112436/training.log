@@ -1,0 +1,18 @@
+2025-06-07 11:24:36,991 - INFO - 📊 Training strategy:
+2025-06-07 11:24:36,991 - INFO -    - Max training steps per epoch: 30
+2025-06-07 11:24:36,991 - INFO -    - Max validation steps: 7
+2025-06-07 11:24:36,991 - INFO -    - Total epochs: 2
+2025-06-07 11:24:36,991 - INFO -    - Training coverage: 100.0%
+2025-06-07 11:24:36,991 - INFO -    - Validation coverage: 100.0%
+2025-06-07 11:26:04,752 - INFO - Epoch 1 - Training: 0.175029, Validation: 0.085722, Time: 87.76s
+2025-06-07 11:26:04,752 - INFO - Validation loss trend: improving
+2025-06-07 11:27:25,532 - INFO - Epoch 2 - Training: 0.070883, Validation: 0.076316, Time: 80.78s
+2025-06-07 11:27:25,533 - INFO - Validation loss trend: improving
+2025-06-07 11:27:25,533 - INFO - ✅ Enhanced training loop completed successfully!
+2025-06-07 11:27:25,533 - INFO - 🔍 Starting model testing phase...
+2025-06-07 11:27:39,170 - INFO - 📊 Detailed test results saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_112436/test_results/validation_predictions_detailed.csv
+2025-06-07 11:27:39,170 - INFO - 📊 Test summary saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_112436/test_results/test_summary.csv
+2025-06-07 11:27:39,170 - INFO - 📊 Total test samples: 378
+2025-06-07 11:27:39,171 - INFO - 📊 Training history saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_112436/training_history.csv
+2025-06-07 11:27:40,382 - INFO - 📈 Loss curves plot saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_112436/loss_curves.png
+2025-06-07 11:27:40,383 - INFO - 🎉 All training outputs successfully saved!
