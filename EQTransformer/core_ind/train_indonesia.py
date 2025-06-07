@@ -687,24 +687,30 @@ def train_indonesia_eqt(
     else:
         # Enhanced manual training loop dengan tqdm progress bars
         print("🚀 STARTING ENHANCED TRAINING LOOP...")
-        print(f"⚡ Mode: Manual batch-by-batch training (CPU optimized)")
         
-        # Setup logging
+        # Setup logging - DISABLE console handler untuk avoid interference dengan tqdm
         log_file = os.path.join(output_dir, 'training.log')
-        logging.basicConfig(
-            level=logging.INFO,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            handlers=[
-                logging.FileHandler(log_file),
-                logging.StreamHandler()
-            ]
-        )
-        logger = logging.getLogger(__name__)
+        
+        # Create logger dengan hanya file handler
+        logger = logging.getLogger('eqt_training')
+        logger.setLevel(logging.INFO)
+        
+        # Clear any existing handlers
+        for handler in logger.handlers[:]:
+            logger.removeHandler(handler)
+        
+        # Add only file handler (no console output to avoid tqdm interference)
+        file_handler = logging.FileHandler(log_file)
+        file_handler.setLevel(logging.INFO)
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        file_handler.setFormatter(formatter)
+        logger.addHandler(file_handler)
         
         # Limit steps per epoch untuk mencegah stuck
         max_train_steps = min(len(training_generator), 20)  # Maksimal 20 batches per epoch
         max_val_steps = min(len(validation_generator), 5)   # Maksimal 5 batches validation
         
+        # Log ke file saja (tidak ke console)
         logger.info(f"📊 Training strategy:")
         logger.info(f"   - Max training steps per epoch: {max_train_steps}")
         logger.info(f"   - Max validation steps: {max_val_steps}")
@@ -717,82 +723,67 @@ def train_indonesia_eqt(
             'epoch_time': []
         }
         
-        print(f"\n🚀 Starting {epochs} epochs with enhanced progress tracking...")
+        print(f"📊 Training: {max_train_steps} batches/epoch, Validation: {max_val_steps} batches")
+        print(f"🚀 Starting {epochs} epochs training...")
+        print()  # Space before progress bars
         
-        # Main training loop dengan tqdm
+        # Main training loop dengan clean tqdm
         for epoch in range(epochs):
             epoch_start_time = time.time()
             
-            # Training phase dengan tqdm progress bar
-            logger.info(f"\n📊 Epoch {epoch+1}/{epochs}")
-            
-            # Training progress bar
-            train_pbar = tqdm(
-                range(max_train_steps), 
-                desc=f"Training Epoch {epoch+1}",
-                unit="batch",
-                ncols=100,
-                leave=True
-            )
-            
+            # Training phase dengan single clean progress bar
             epoch_train_losses = []
             
-            for step in train_pbar:
-                try:
-                    batch_idx = step % len(training_generator)
-                    train_batch = training_generator[batch_idx]
-                    
-                    train_loss = model.train_on_batch(train_batch[0], train_batch[1])
-                    current_loss = train_loss[0] if isinstance(train_loss, list) else train_loss
-                    epoch_train_losses.append(current_loss)
-                    
-                    # Update progress bar dengan loss info
-                    avg_loss = np.mean(epoch_train_losses)
-                    train_pbar.set_postfix({
-                        'Loss': f'{current_loss:.4f}',
-                        'Avg': f'{avg_loss:.4f}'
-                    })
-                    
-                except Exception as e:
-                    logger.error(f"Training step {step+1} failed: {e}")
-                    continue
+            train_desc = f"Epoch {epoch+1}/{epochs} - Training"
+            with tqdm(total=max_train_steps, desc=train_desc, unit="batch", 
+                     ncols=80, leave=False, dynamic_ncols=False) as train_pbar:
+                
+                for step in range(max_train_steps):
+                    try:
+                        batch_idx = step % len(training_generator)
+                        train_batch = training_generator[batch_idx]
+                        
+                        train_loss = model.train_on_batch(train_batch[0], train_batch[1])
+                        current_loss = train_loss[0] if isinstance(train_loss, list) else train_loss
+                        epoch_train_losses.append(current_loss)
+                        
+                        # Update progress bar dengan info singkat
+                        avg_loss = np.mean(epoch_train_losses)
+                        train_pbar.set_postfix_str(f"loss: {current_loss:.4f}, avg: {avg_loss:.4f}")
+                        train_pbar.update(1)
+                        
+                    except Exception as e:
+                        logger.error(f"Training step {step+1} failed: {e}")
+                        train_pbar.update(1)
+                        continue
             
-            train_pbar.close()
-            
-            # Validation phase dengan progress bar
-            val_pbar = tqdm(
-                range(max_val_steps), 
-                desc=f"Validation Epoch {epoch+1}",
-                unit="batch",
-                ncols=100,
-                leave=False
-            )
-            
+            # Validation phase dengan single clean progress bar
             epoch_val_losses = []
             
-            for step in val_pbar:
-                try:
-                    batch_idx = step % len(validation_generator)
-                    val_batch = validation_generator[batch_idx]
-                    
-                    val_loss = model.test_on_batch(val_batch[0], val_batch[1])
-                    current_val_loss = val_loss[0] if isinstance(val_loss, list) else val_loss
-                    epoch_val_losses.append(current_val_loss)
-                    
-                    # Update validation progress bar
-                    avg_val_loss = np.mean(epoch_val_losses)
-                    val_pbar.set_postfix({
-                        'Val Loss': f'{current_val_loss:.4f}',
-                        'Avg': f'{avg_val_loss:.4f}'
-                    })
-                    
-                except Exception as e:
-                    logger.error(f"Validation step {step+1} failed: {e}")
-                    continue
+            val_desc = f"Epoch {epoch+1}/{epochs} - Validation"
+            with tqdm(total=max_val_steps, desc=val_desc, unit="batch",
+                     ncols=80, leave=False, dynamic_ncols=False) as val_pbar:
+                
+                for step in range(max_val_steps):
+                    try:
+                        batch_idx = step % len(validation_generator)
+                        val_batch = validation_generator[batch_idx]
+                        
+                        val_loss = model.test_on_batch(val_batch[0], val_batch[1])
+                        current_val_loss = val_loss[0] if isinstance(val_loss, list) else val_loss
+                        epoch_val_losses.append(current_val_loss)
+                        
+                        # Update validation progress bar
+                        avg_val_loss = np.mean(epoch_val_losses)
+                        val_pbar.set_postfix_str(f"val_loss: {current_val_loss:.4f}, avg: {avg_val_loss:.4f}")
+                        val_pbar.update(1)
+                        
+                    except Exception as e:
+                        logger.error(f"Validation step {step+1} failed: {e}")
+                        val_pbar.update(1)
+                        continue
             
-            val_pbar.close()
-            
-            # Epoch summary
+            # Epoch summary - print setelah progress bars selesai
             epoch_time = time.time() - epoch_start_time
             avg_train_loss = np.mean(epoch_train_losses) if epoch_train_losses else 0.0
             avg_val_loss = np.mean(epoch_val_losses) if epoch_val_losses else 0.0
@@ -801,139 +792,141 @@ def train_indonesia_eqt(
             history.history['val_loss'].append(avg_val_loss)
             history.history['epoch_time'].append(epoch_time)
             
-            # Log epoch results
-            logger.info(f"   ✅ Epoch {epoch+1} - Avg Training Loss: {avg_train_loss:.6f}")
-            logger.info(f"   ✅ Epoch {epoch+1} - Avg Validation Loss: {avg_val_loss:.6f}")
-            logger.info(f"   ⏰ Epoch {epoch+1} - Time: {epoch_time:.2f}s")
+            # Print clean epoch summary
+            print(f"✅ Epoch {epoch+1}: train_loss={avg_train_loss:.6f}, val_loss={avg_val_loss:.6f}, time={epoch_time:.1f}s")
+            
+            # Log ke file
+            logger.info(f"Epoch {epoch+1} - Training: {avg_train_loss:.6f}, Validation: {avg_val_loss:.6f}, Time: {epoch_time:.2f}s")
             
             # Simple early stopping
             if epoch > 2 and avg_val_loss > history.history['val_loss'][-2]:
+                print(f"🛑 Early stopping: validation loss increased")
                 logger.info(f"🛑 Early stopping: validation loss increased")
                 break
         
+        print(f"✅ Training completed!")
         logger.info("✅ Enhanced training loop completed successfully!")
         
-        # Testing Phase - NEW FEATURE!
-        print(f"\n🔍 TESTING MODEL ON VALIDATION DATA...")
+        # Testing Phase dengan clean progress bar
+        print(f"\n🔍 Testing model on validation data...")
         logger.info("🔍 Starting model testing phase...")
         
         test_results = []
-        test_pbar = tqdm(
-            range(min(len(validation_generator), 10)), 
-            desc="Testing Model",
-            unit="batch",
-            ncols=100
-        )
+        test_batches = min(len(validation_generator), 10)
         
-        for batch_idx in test_pbar:
-            try:
-                val_batch = validation_generator[batch_idx]
-                predictions = model.predict(val_batch[0], verbose=0)
-                
-                # Get ground truth labels
-                true_detector = val_batch[1]['detector']
-                true_picker_P = val_batch[1]['picker_P']  
-                true_picker_S = val_batch[1]['picker_S']
-                
-                # Extract predictions for each sample in batch
-                batch_size = val_batch[0]['input'].shape[0]
-                for sample_idx in range(batch_size):
+        test_desc = "Testing Model"
+        with tqdm(total=test_batches, desc=test_desc, unit="batch",
+                 ncols=80, leave=False, dynamic_ncols=False) as test_pbar:
+            
+            for batch_idx in range(test_batches):
+                try:
+                    val_batch = validation_generator[batch_idx]
+                    predictions = model.predict(val_batch[0], verbose=0)
                     
-                    # Predictions
-                    pred_detector = predictions[0][sample_idx].flatten()
-                    pred_picker_P = predictions[1][sample_idx].flatten()
-                    pred_picker_S = predictions[2][sample_idx].flatten()
+                    # Get ground truth labels
+                    true_detector = val_batch[1]['detector']
+                    true_picker_P = val_batch[1]['picker_P']  
+                    true_picker_S = val_batch[1]['picker_S']
                     
-                    # Ground truth
-                    gt_detector = true_detector[sample_idx].flatten()
-                    gt_picker_P = true_picker_P[sample_idx].flatten()
-                    gt_picker_S = true_picker_S[sample_idx].flatten()
-                    
-                    # Find peak indices (argmax)
-                    predicted_P_index = int(np.argmax(pred_picker_P))
-                    predicted_S_index = int(np.argmax(pred_picker_S))
-                    
-                    # Find ground truth indices (argmax dari gaussian labels)
-                    true_P_index = int(np.argmax(gt_picker_P))
-                    true_S_index = int(np.argmax(gt_picker_S))
-                    
-                    # Calculate errors (dalam samples)
-                    P_error_samples = predicted_P_index - true_P_index
-                    S_error_samples = predicted_S_index - true_S_index
-                    
-                    # Convert to time (assuming 100 Hz sampling)
-                    sampling_rate = 100  # Hz
-                    P_error_seconds = P_error_samples / sampling_rate
-                    S_error_seconds = S_error_samples / sampling_rate
-                    
-                    # Check if detection is significant (above threshold)
-                    detector_threshold = 0.5
-                    P_threshold = 0.3
-                    S_threshold = 0.3
-                    
-                    is_earthquake_detected = np.max(pred_detector) > detector_threshold
-                    is_P_detected = np.max(pred_picker_P) > P_threshold  
-                    is_S_detected = np.max(pred_picker_S) > S_threshold
-                    
-                    # Ground truth analysis
-                    has_earthquake = np.max(gt_detector) > 0.1  # Ground truth threshold
-                    has_P_wave = np.max(gt_picker_P) > 0.1
-                    has_S_wave = np.max(gt_picker_S) > 0.1
-                    
-                    test_results.append({
-                        # Identifiers
-                        'batch_idx': batch_idx,
-                        'sample_idx': sample_idx,
+                    # Extract predictions for each sample in batch
+                    batch_size = val_batch[0]['input'].shape[0]
+                    for sample_idx in range(batch_size):
                         
-                        # Detection predictions (max values)
-                        'detector_max': float(np.max(pred_detector)),
-                        'detector_mean': float(np.mean(pred_detector)),
-                        'picker_P_max': float(np.max(pred_picker_P)),
-                        'picker_P_mean': float(np.mean(pred_picker_P)),
-                        'picker_S_max': float(np.max(pred_picker_S)),
-                        'picker_S_mean': float(np.mean(pred_picker_S)),
+                        # Predictions
+                        pred_detector = predictions[0][sample_idx].flatten()
+                        pred_picker_P = predictions[1][sample_idx].flatten()
+                        pred_picker_S = predictions[2][sample_idx].flatten()
                         
-                        # Peak locations (indices)
-                        'predicted_P_index': predicted_P_index,
-                        'predicted_S_index': predicted_S_index,
-                        'true_P_index': true_P_index,
-                        'true_S_index': true_S_index,
+                        # Ground truth
+                        gt_detector = true_detector[sample_idx].flatten()
+                        gt_picker_P = true_picker_P[sample_idx].flatten()
+                        gt_picker_S = true_picker_S[sample_idx].flatten()
                         
-                        # Time locations (seconds from start)
-                        'predicted_P_time_sec': predicted_P_index / sampling_rate,
-                        'predicted_S_time_sec': predicted_S_index / sampling_rate,
-                        'true_P_time_sec': true_P_index / sampling_rate,
-                        'true_S_time_sec': true_S_index / sampling_rate,
+                        # Find peak indices (argmax)
+                        predicted_P_index = int(np.argmax(pred_picker_P))
+                        predicted_S_index = int(np.argmax(pred_picker_S))
                         
-                        # Errors
-                        'P_error_samples': P_error_samples,
-                        'S_error_samples': S_error_samples,
-                        'P_error_seconds': P_error_seconds,
-                        'S_error_seconds': S_error_seconds,
-                        'P_error_abs_seconds': abs(P_error_seconds),
-                        'S_error_abs_seconds': abs(S_error_seconds),
+                        # Find ground truth indices (argmax dari gaussian labels)
+                        true_P_index = int(np.argmax(gt_picker_P))
+                        true_S_index = int(np.argmax(gt_picker_S))
                         
-                        # Detection flags
-                        'is_earthquake_detected': is_earthquake_detected,
-                        'is_P_detected': is_P_detected,
-                        'is_S_detected': is_S_detected,
-                        'has_earthquake': has_earthquake,
-                        'has_P_wave': has_P_wave,
-                        'has_S_wave': has_S_wave,
+                        # Calculate errors (dalam samples)
+                        P_error_samples = predicted_P_index - true_P_index
+                        S_error_samples = predicted_S_index - true_S_index
                         
-                        # Accuracy flags
-                        'earthquake_detection_correct': (is_earthquake_detected == has_earthquake),
-                        'P_detection_correct': (is_P_detected == has_P_wave),
-                        'S_detection_correct': (is_S_detected == has_S_wave)
-                    })
-                
-                test_pbar.set_postfix({'Samples': len(test_results)})
-                
-            except Exception as e:
-                logger.error(f"Testing batch {batch_idx} failed: {e}")
-                continue
-        
-        test_pbar.close()
+                        # Convert to time (assuming 100 Hz sampling)
+                        sampling_rate = 100  # Hz
+                        P_error_seconds = P_error_samples / sampling_rate
+                        S_error_seconds = S_error_samples / sampling_rate
+                        
+                        # Check if detection is significant (above threshold)
+                        detector_threshold = 0.5
+                        P_threshold = 0.3
+                        S_threshold = 0.3
+                        
+                        is_earthquake_detected = np.max(pred_detector) > detector_threshold
+                        is_P_detected = np.max(pred_picker_P) > P_threshold  
+                        is_S_detected = np.max(pred_picker_S) > S_threshold
+                        
+                        # Ground truth analysis
+                        has_earthquake = np.max(gt_detector) > 0.1  # Ground truth threshold
+                        has_P_wave = np.max(gt_picker_P) > 0.1
+                        has_S_wave = np.max(gt_picker_S) > 0.1
+                        
+                        test_results.append({
+                            # Identifiers
+                            'batch_idx': batch_idx,
+                            'sample_idx': sample_idx,
+                            
+                            # Detection predictions (max values)
+                            'detector_max': float(np.max(pred_detector)),
+                            'detector_mean': float(np.mean(pred_detector)),
+                            'picker_P_max': float(np.max(pred_picker_P)),
+                            'picker_P_mean': float(np.mean(pred_picker_P)),
+                            'picker_S_max': float(np.max(pred_picker_S)),
+                            'picker_S_mean': float(np.mean(pred_picker_S)),
+                            
+                            # Peak locations (indices)
+                            'predicted_P_index': predicted_P_index,
+                            'predicted_S_index': predicted_S_index,
+                            'true_P_index': true_P_index,
+                            'true_S_index': true_S_index,
+                            
+                            # Time locations (seconds from start)
+                            'predicted_P_time_sec': predicted_P_index / sampling_rate,
+                            'predicted_S_time_sec': predicted_S_index / sampling_rate,
+                            'true_P_time_sec': true_P_index / sampling_rate,
+                            'true_S_time_sec': true_S_index / sampling_rate,
+                            
+                            # Errors
+                            'P_error_samples': P_error_samples,
+                            'S_error_samples': S_error_samples,
+                            'P_error_seconds': P_error_seconds,
+                            'S_error_seconds': S_error_seconds,
+                            'P_error_abs_seconds': abs(P_error_seconds),
+                            'S_error_abs_seconds': abs(S_error_seconds),
+                            
+                            # Detection flags
+                            'is_earthquake_detected': is_earthquake_detected,
+                            'is_P_detected': is_P_detected,
+                            'is_S_detected': is_S_detected,
+                            'has_earthquake': has_earthquake,
+                            'has_P_wave': has_P_wave,
+                            'has_S_wave': has_S_wave,
+                            
+                            # Accuracy flags
+                            'earthquake_detection_correct': (is_earthquake_detected == has_earthquake),
+                            'P_detection_correct': (is_P_detected == has_P_wave),
+                            'S_detection_correct': (is_S_detected == has_S_wave)
+                        })
+                    
+                    test_pbar.set_postfix_str(f"samples: {len(test_results)}")
+                    test_pbar.update(1)
+                    
+                except Exception as e:
+                    logger.error(f"Testing batch {batch_idx} failed: {e}")
+                    test_pbar.update(1)
+                    continue
         
         # Save detailed test results
         if test_results:
