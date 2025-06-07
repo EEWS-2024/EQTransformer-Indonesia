@@ -550,9 +550,21 @@ def train_indonesia_eqt(
     
     # Setup output directory
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_dir = f"indonesia_model_{timestamp}"
-    models_dir = os.path.join(output_dir, "models")
+    
+    # Save to root project models directory instead of current directory
+    project_root = os.path.join(current_dir, '..', '..')  # From core_ind to EQTransformer-Indonesia/
+    models_dir = os.path.join(project_root, 'models')
+    output_dir = os.path.join(models_dir, f"indonesia_model_{timestamp}")
+    
+    # Create models directory if it doesn't exist
     os.makedirs(models_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
+    
+    print(f"📁 Output akan disimpan ke: {output_dir}")
+    print(f"🗂️ Relative path: models/indonesia_model_{timestamp}")
+    
+    if debug_traces:
+        print(f"🐛 DEBUG: Model akan disimpan langsung ke directory model")
     
     # Callbacks
     callbacks = [
@@ -563,7 +575,7 @@ def train_indonesia_eqt(
             restore_best_weights=True
         ),
         ModelCheckpoint(
-            filepath=os.path.join(models_dir, 'best_model_epoch_{epoch:03d}_loss_{val_loss:.4f}.h5'),
+            filepath=os.path.join(output_dir, 'best_model_epoch_{epoch:03d}_loss_{val_loss:.4f}.h5'),
             monitor='val_loss',
             save_best_only=True,
             verbose=1
@@ -578,7 +590,8 @@ def train_indonesia_eqt(
     ]
     
     print(f"✅ Callbacks setup!")
-    print(f"📁 Output directory: {output_dir}")
+    print(f"📁 Model checkpoints akan disimpan ke: {output_dir}")
+    print(f"📁 Training logs dan results ke: {output_dir}")
     
     # Training
     print(f"\n🚀 MEMULAI TRAINING...")
@@ -1091,6 +1104,9 @@ def train_indonesia_eqt(
     print(f"✅ Hasil tersimpan di: {output_dir}")
     print("="*80)
     
+    # Calculate relative path from project root for user-friendly display
+    relative_path = os.path.relpath(output_dir, project_root)
+    
     return output_dir, history, model
 
 if __name__ == "__main__":
@@ -1137,8 +1153,15 @@ if __name__ == "__main__":
     
     if result:
         output_dir, history, model = result
+        
+        # Calculate paths relative to project root for display
+        project_root = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
+        relative_output = os.path.relpath(output_dir, project_root)
+        
         print(f"\n🎯 MODEL SIAP DIGUNAKAN!")
-        print(f"📁 Lokasi: {output_dir}")
-        print(f"🔍 Untuk prediksi, gunakan: final_model.h5")
+        print(f"📁 Lokasi output: {relative_output}")
+        print(f"🎯 Untuk prediksi, gunakan: {os.path.join(relative_output, 'final_model.h5')}")
+        print(f"💾 Training history: {os.path.join(relative_output, 'training_history.csv')}")
+        print(f"📈 Loss curves: {os.path.join(relative_output, 'loss_curves.png')}")
     
     print("\n🇮🇩 Selesai! 🌋") 
