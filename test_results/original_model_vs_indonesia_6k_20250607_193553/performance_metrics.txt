@@ -1,0 +1,41 @@
+EQTransformer Indonesia Model Performance Metrics 🌋
+======================================================================
+
+🎯 DETECTION ACCURACY:
+   earthquake_detection_accuracy: 0.9972
+   P_wave_detection_accuracy: 0.8580
+   S_wave_detection_accuracy: 0.6506
+
+⏰ TIMING ACCURACY:
+   P_mean_error_sec: 0.8840
+   P_median_error_sec: 0.4350
+   P_std_error_sec: 3.3845
+   P_95th_percentile_error_sec: 1.8300
+   S_mean_error_sec: 2.4066
+   S_median_error_sec: 0.4800
+   S_std_error_sec: 7.9097
+   S_95th_percentile_error_sec: 8.0385
+
+🎯 TIMING THRESHOLDS:
+   P_accuracy_within_1s: 0.8551
+   P_accuracy_within_0.5s: 0.5540
+   P_accuracy_within_0.1s: 0.1591
+   S_accuracy_within_1s: 0.6790
+   S_accuracy_within_0.5s: 0.5170
+   S_accuracy_within_0.1s: 0.1847
+
+📊 DETECTION PROBABILITIES:
+   detector_mean_prob: 0.9937
+   detector_std_prob: 0.0457
+   picker_P_mean_prob: 0.6737
+   picker_P_std_prob: 0.2757
+   picker_S_mean_prob: 0.3555
+   picker_S_std_prob: 0.1415
+
+📈 SNR-BASED ANALYSIS:
+   SNR_10-20:
+     count: 352
+     P_mean_error: 0.8840
+     S_mean_error: 2.4066
+     detection_accuracy: 0.9972
+

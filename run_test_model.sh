@@ -33,6 +33,7 @@ BATCH_SIZE=32
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 
 # Auto-detect latest model if not specified
+MODEL_PATH_ORIGINAL="$MODEL_PATH"
 if [ -z "$MODEL_PATH" ]; then
     # Priority: final_model.h5 (full model) over model_weights.h5 (weights only)
     MODEL_PATH=$(find models/ -name "final_model.h5" -printf "%T@ %p\n" | sort -n | tail -1 | cut -d' ' -f2-)
@@ -164,4 +165,43 @@ else
     echo "❌ TESTING GAGAL!"
     echo "   Cek log di atas untuk detail error"
     exit 1
-fi 
+fi
+
+# Create config JSON file for tracking
+CONFIG_FILE="$OUTPUT_DIR/test_config.json"
+mkdir -p "$(dirname "$CONFIG_FILE")"
+
+cat > "$CONFIG_FILE" << EOF
+{
+  "test_info": {
+    "test_type": "Indonesia Model Testing",
+    "timestamp": "$TIMESTAMP",
+    "test_date": "$(date '+%Y-%m-%d %H:%M:%S')",
+    "script_version": "run_test_model.sh v1.0"
+  },
+  "model_config": {
+    "model_path": "$MODEL_PATH",
+    "model_name": "$MODEL_BASENAME",
+    "model_type": "Indonesia-trained EQTransformer",
+    "auto_detected": $([ -z "$MODEL_PATH_ORIGINAL" ] && echo "true" || echo "false")
+  },
+  "dataset_config": {
+    "test_csv": "$TEST_CSV",
+    "test_hdf5": "$TEST_HDF5",
+    "dataset_type": "Indonesia validation set",
+    "expected_traces": 411,
+    "input_shape": "(30085, 3)",
+    "sample_rate": "100 Hz",
+    "duration": "300.85 seconds"
+  },
+  "test_parameters": {
+    "batch_size": $BATCH_SIZE,
+    "output_directory": "$OUTPUT_DIR",
+    "environment": "conda eqt",
+    "hardware": "CPU"
+  },
+  "command_executed": "$CMD"
+}
+EOF
+
+echo "📄 Config saved: $CONFIG_FILE" 

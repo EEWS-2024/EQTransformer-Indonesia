@@ -114,6 +114,51 @@ python EQTransformer/core_ind/test_original_model.py \
 # Store exit status
 TEST_EXIT_STATUS=$?
 
+# Create config JSON file for tracking
+CONFIG_FILE="$OUTPUT_DIR/test_config.json"
+mkdir -p "$(dirname "$CONFIG_FILE")"
+
+cat > "$CONFIG_FILE" << EOF
+{
+  "test_info": {
+    "test_type": "Original Model vs Indonesia Dataset",
+    "timestamp": "$TIMESTAMP",
+    "test_date": "$(date '+%Y-%m-%d %H:%M:%S')",
+    "script_version": "run_test_original_vs_indonesia.sh v1.0"
+  },
+  "model_config": {
+    "model_path": "$MODEL_PATH",
+    "model_name": "$MODEL_NAME",
+    "model_type": "$MODEL_TYPE",
+    "model_description": "Pre-trained global seismic model",
+    "original_input_shape": "(6000, 3)",
+    "original_duration": "60 seconds @ 100Hz"
+  },
+  "dataset_config": {
+    "test_csv": "$TEST_CSV_6K",
+    "test_hdf5": "$TEST_HDF5_6K",
+    "dataset_type": "Indonesia 6K windowed dataset",
+    "original_dataset": "Indonesia validation set (30085 samples)",
+    "windowed_samples": 6000,
+    "windowing_strategy": "optimal (centered on P/S arrivals)",
+    "expected_traces": 358,
+    "success_rate": "87.1%",
+    "input_shape": "(6000, 3)",
+    "duration": "60 seconds @ 100Hz"
+  },
+  "test_parameters": {
+    "batch_size": $BATCH_SIZE,
+    "output_directory": "$OUTPUT_DIR",
+    "environment": "conda eqt",
+    "hardware": "CPU",
+    "custom_objects": ["SeqSelfAttention", "FeedForward", "f1", "precision", "recall"]
+  },
+  "python_command": "python EQTransformer/core_ind/test_original_model.py --model $MODEL_PATH --test_csv $TEST_CSV_6K --test_hdf5 $TEST_HDF5_6K --batch_size $BATCH_SIZE --output_dir $OUTPUT_DIR"
+}
+EOF
+
+echo "📄 Config saved: $CONFIG_FILE"
+
 # Check exit status
 if [ $TEST_EXIT_STATUS -eq 0 ]; then
     echo ""
