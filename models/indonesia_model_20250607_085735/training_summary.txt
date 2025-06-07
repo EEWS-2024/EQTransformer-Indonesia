@@ -1,0 +1,16 @@
+🇮🇩 EQTransformer Indonesia Training Summary 🌋
+============================================================
+Dataset: Indonesia Seismic Data
+Input dimension: (30085, 3)
+Training traces: 1313
+Validation traces: 329
+Batch size: 4
+Epochs completed: 10
+Training time: 4.7 minutes
+Final training loss: 0.0573
+Final validation loss: 0.0414
+Total parameters: 101,395
+CNN blocks: 3
+LSTM blocks: 1
+Augmentation: False
+Combined data: False

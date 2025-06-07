@@ -1,0 +1,32 @@
+2025-06-07 08:57:35,830 - INFO - 📊 Training strategy:
+2025-06-07 08:57:35,830 - INFO -    - Max training steps per epoch: 20
+2025-06-07 08:57:35,830 - INFO -    - Max validation steps: 5
+2025-06-07 08:57:35,830 - INFO -    - Total epochs: 10
+2025-06-07 08:58:07,779 - INFO - Epoch 1 - Training: 0.212059, Validation: 0.115753, Time: 31.95s
+2025-06-07 08:58:07,779 - INFO - Validation loss trend: improving
+2025-06-07 08:58:34,407 - INFO - Epoch 2 - Training: 0.075265, Validation: 0.070658, Time: 26.63s
+2025-06-07 08:58:34,408 - INFO - Validation loss trend: improving
+2025-06-07 08:59:01,113 - INFO - Epoch 3 - Training: 0.069894, Validation: 0.064364, Time: 26.71s
+2025-06-07 08:59:01,113 - INFO - Validation loss trend: improving
+2025-06-07 08:59:27,581 - INFO - Epoch 4 - Training: 0.065073, Validation: 0.059869, Time: 26.47s
+2025-06-07 08:59:27,581 - INFO - Validation loss trend: improving
+2025-06-07 08:59:54,415 - INFO - Epoch 5 - Training: 0.063031, Validation: 0.060295, Time: 26.83s
+2025-06-07 08:59:54,415 - INFO - Validation loss trend: stable/worsening
+2025-06-07 09:00:20,826 - INFO - Epoch 6 - Training: 0.060380, Validation: 0.053732, Time: 26.41s
+2025-06-07 09:00:20,826 - INFO - Validation loss trend: improving
+2025-06-07 09:00:47,551 - INFO - Epoch 7 - Training: 0.058377, Validation: 0.057132, Time: 26.72s
+2025-06-07 09:00:47,551 - INFO - Validation loss trend: stable/worsening
+2025-06-07 09:01:14,197 - INFO - Epoch 8 - Training: 0.059867, Validation: 0.053218, Time: 26.65s
+2025-06-07 09:01:14,197 - INFO - Validation loss trend: improving
+2025-06-07 09:01:40,753 - INFO - Epoch 9 - Training: 0.062069, Validation: 0.051477, Time: 26.56s
+2025-06-07 09:01:40,753 - INFO - Validation loss trend: improving
+2025-06-07 09:02:07,399 - INFO - Epoch 10 - Training: 0.057258, Validation: 0.041385, Time: 26.65s
+2025-06-07 09:02:07,399 - INFO - Validation loss trend: improving
+2025-06-07 09:02:07,399 - INFO - ✅ Enhanced training loop completed successfully!
+2025-06-07 09:02:07,399 - INFO - 🔍 Starting model testing phase...
+2025-06-07 09:02:14,202 - INFO - 📊 Detailed test results saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085735/test_results/validation_predictions_detailed.csv
+2025-06-07 09:02:14,202 - INFO - 📊 Test summary saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085735/test_results/test_summary.csv
+2025-06-07 09:02:14,202 - INFO - 📊 Total test samples: 40
+2025-06-07 09:02:14,203 - INFO - 📊 Training history saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085735/training_history.csv
+2025-06-07 09:02:15,409 - INFO - 📈 Loss curves plot saved to: /home/mooc_parallel_2021_003/new/set-up-jupyterlab-gcp/docker_jupyterlab/jupyter-data/EQTransformer-Indonesia/EQTransformer/core_ind/../../models/indonesia_model_20250607_085735/loss_curves.png
+2025-06-07 09:02:15,410 - INFO - 🎉 All training outputs successfully saved!
