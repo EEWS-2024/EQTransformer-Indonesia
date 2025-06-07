@@ -4,8 +4,8 @@
 # ====================================================================
 # 🎯 TRAINING PARAMETERS - EDIT SESUAI KEBUTUHAN
 # ====================================================================
-BATCH_SIZE=4        # Batch size (recommended: 2-8 for 30k samples)
-EPOCHS=10           # Number of epochs
+BATCH_SIZE=32        # Batch size (recommended: 2-8 for 30k samples)
+EPOCHS=2           # Number of epochs
 AUGMENTATION=false   # Data augmentation (true/false)
 PATIENCE=3          # Early stopping patience (epochs)
 COMBINED_DATA=false # Use combined train+valid data (true/false)

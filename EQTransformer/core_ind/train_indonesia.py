@@ -161,62 +161,43 @@ class TqdmCallback(tf.keras.callbacks.Callback):
         print()  # Spacing
 
 def check_datasets():
-    """Verifikasi ketersediaan dan kualitas dataset"""
+    """Check if datasets are available and validate them."""
+    train_file = "../../datasets/indonesia_train.csv"
+    valid_file = "../../datasets/indonesia_valid.csv"
     
-    print("🔍 VERIFIKASI DATASET")
-    print("="*60)
+    if not os.path.exists(train_file):
+        print(f"❌ Training dataset not found: {train_file}")
+        return False, 0, 0
     
-    datasets_dir = os.path.join(project_root, 'datasets')
-    
-    files_to_check = [
-        ('indonesia_train.hdf5', 'Training HDF5'),
-        ('indonesia_train.csv', 'Training CSV'),
-        ('indonesia_valid.hdf5', 'Validation HDF5'),
-        ('indonesia_valid.csv', 'Validation CSV')
-    ]
-    
-    all_files_exist = True
-    
-    # Progress bar untuk file checking
-    for filename, description in tqdm(files_to_check, desc="Checking files"):
-        filepath = os.path.join(datasets_dir, filename)
-        if os.path.exists(filepath):
-            size_mb = os.path.getsize(filepath) / (1024*1024)
-            print(f"✅ {description}: {size_mb:.1f} MB")
-        else:
-            print(f"❌ {description}: NOT FOUND")
-            all_files_exist = False
-    
-    if not all_files_exist:
-        print("\n❌ Dataset tidak lengkap!")
-        return False, None
-    
-    # Verifikasi format data
-    train_csv = os.path.join(datasets_dir, 'indonesia_train.csv')
-    print("📋 Loading training CSV...")
-    df = pd.read_csv(train_csv)
-    
-    print(f"\n📊 INFORMASI DATASET:")
-    print(f"   Training traces: {len(df)}")
-    
-    # Cek trace names format dengan progress bar
-    print("🔍 Verifying trace names format...")
-    traces_with_ev = 0
-    for trace_name in tqdm(df['trace_name'], desc="Checking trace names", leave=False):
-        if trace_name.endswith('_EV'):
-            traces_with_ev += 1
-    
-    if traces_with_ev == len(df):
-        print(f"✅ Semua trace names memiliki format yang benar (_EV suffix)")
-    else:
-        print(f"❌ {len(df) - traces_with_ev} traces tidak memiliki _EV suffix")
-        return False, None
-    
-    print(f"   P-arrival range: {df['p_arrival_sample'].min()} - {df['p_arrival_sample'].max()}")
-    print(f"   S-arrival range: {df['s_arrival_sample'].min()} - {df['s_arrival_sample'].max()}")
-    print(f"   Sample trace: {df.iloc[0]['trace_name']}")
-    
-    return True, datasets_dir
+    if not os.path.exists(valid_file):
+        print(f"❌ Validation dataset not found: {valid_file}")
+        return False, 0, 0
+        
+    try:
+        # Load training and validation datasets separately
+        train_df = pd.read_csv(train_file)
+        valid_df = pd.read_csv(valid_file)
+        
+        print(f"📊 Dataset Information:")
+        print(f"   Training traces: {len(train_df)}")
+        print(f"   Validation traces: {len(valid_df)}")
+        print(f"   Total traces: {len(train_df) + len(valid_df)}")
+        print(f"   Training split: {len(train_df)/(len(train_df) + len(valid_df))*100:.1f}%")
+        print(f"   Validation split: {len(valid_df)/(len(train_df) + len(valid_df))*100:.1f}%")
+        
+        # Validate required columns exist
+        required_cols = ['trace_name', 'p_arrival_sample', 's_arrival_sample', 'coda_end_sample', 'trace_category']
+        for df_name, df in [("Training", train_df), ("Validation", valid_df)]:
+            missing_cols = [col for col in required_cols if col not in df.columns]
+            if missing_cols:
+                print(f"❌ {df_name} dataset missing columns: {missing_cols}")
+                return False, 0, 0
+        
+        return True, len(train_df), len(valid_df)
+        
+    except Exception as e:
+        print(f"❌ Error reading datasets: {e}")
+        return False, 0, 0
 
 def train_indonesia_eqt(
     batch_size=4,
@@ -287,7 +268,7 @@ def train_indonesia_eqt(
     print("="*80)
     
     # Verifikasi dataset
-    dataset_ok, datasets_dir = check_datasets()
+    dataset_ok, train_traces, valid_traces = check_datasets()
     if not dataset_ok:
         return None
     
@@ -295,64 +276,179 @@ def train_indonesia_eqt(
     if use_combined_data:
         # Gabungkan training + validation
         print("📋 Mode: Combined training + validation data")
-        train_hdf5 = os.path.join(datasets_dir, 'indonesia_train.hdf5')
-        train_csv = os.path.join(datasets_dir, 'indonesia_train.csv')
+        train_hdf5 = "../../datasets/indonesia_train.hdf5"
+        train_csv = "../../datasets/indonesia_train.csv"
         
         # Load dan gabungkan CSV
-        df_train = pd.read_csv(os.path.join(datasets_dir, 'indonesia_train.csv'))
-        df_valid = pd.read_csv(os.path.join(datasets_dir, 'indonesia_valid.csv'))
+        df_train = pd.read_csv(train_csv)
+        df_valid = pd.read_csv("../../datasets/indonesia_valid.csv")
         df_combined = pd.concat([df_train, df_valid], ignore_index=True)
         
         # Buat temporary combined CSV
-        combined_csv = os.path.join(datasets_dir, 'temp_combined.csv')
+        combined_csv = "../../datasets/temp_combined.csv"
         df_combined.to_csv(combined_csv, index=False)
         train_csv = combined_csv
         
         all_traces = df_combined['trace_name'].tolist()
-        print(f"   Total traces: {len(all_traces)}")
+        print(f"   Combined traces: {len(all_traces)}")
         
     else:
         # Pisah training dan validation
         print("📋 Mode: Separate training + validation data")
-        train_hdf5 = os.path.join(datasets_dir, 'indonesia_train.hdf5')
-        train_csv = os.path.join(datasets_dir, 'indonesia_train.csv')
+        train_hdf5 = "../../datasets/indonesia_train.hdf5"
+        train_csv = "../../datasets/indonesia_train.csv"
+        valid_hdf5 = "../../datasets/indonesia_valid.hdf5"
+        valid_csv = "../../datasets/indonesia_valid.csv"
         
         df_train = pd.read_csv(train_csv)
-        all_traces = df_train['trace_name'].tolist()
-        print(f"   Training traces: {len(all_traces)}")
+        df_valid = pd.read_csv(valid_csv)
+        
+        # Use all training data
+        training_traces = df_train['trace_name'].tolist()
+        
+        # Use all validation data  
+        validation_traces = df_valid['trace_name'].tolist()
+        
+        print(f"📊 Data splits:")
+        print(f"   Training: {len(training_traces)} traces")
+        print(f"   Validation: {len(validation_traces)} traces")
+        print(f"   Training %: {len(training_traces)/(len(training_traces)+len(validation_traces))*100:.1f}%")
+        print(f"   Validation %: {len(validation_traces)/(len(training_traces)+len(validation_traces))*100:.1f}%")
+        
+        all_traces = training_traces + validation_traces
+        
+        # Verifikasi traces exist di HDF5
+        print(f"🔍 Verifying traces exist in HDF5...")
+        try:
+            with h5py.File(train_hdf5, 'r') as f:
+                missing_traces = []
+                for trace in training_traces[:3]:  # Cek 3 traces pertama training
+                    if trace not in f['data']:
+                        missing_traces.append(trace)
+                        
+            with h5py.File(valid_hdf5, 'r') as f:
+                for trace in validation_traces[:3]:  # Cek 3 traces pertama validation
+                    if trace not in f['data']:
+                        missing_traces.append(trace)
+                        
+            if missing_traces:
+                print(f"❌ Missing traces di HDF5: {missing_traces[:5]}...")
+                return None
+            else:
+                print("✅ Traces verified in HDF5 files")
+        except Exception as e:
+            print(f"⚠️ Could not verify HDF5 files: {e}")
     
     # Debug mode: limit traces untuk testing
     if debug_traces:
         print(f"\n🐛 DEBUG MODE: Menggunakan hanya {debug_traces} traces")
-        original_count = len(all_traces)
-        all_traces = all_traces[:debug_traces]  # Ambil N traces pertama
-        print(f"   Traces dikurangi dari {original_count} → {len(all_traces)}")
+        if use_combined_data:
+            original_count = len(all_traces)
+            all_traces = all_traces[:debug_traces]  # Ambil N traces pertama
+            print(f"   Traces dikurangi dari {original_count} → {len(all_traces)}")
+        else:
+            original_train = len(training_traces)
+            original_valid = len(validation_traces)
+            training_traces = training_traces[:debug_traces//2]
+            validation_traces = validation_traces[:debug_traces//2]
+            print(f"   Training traces: {original_train} → {len(training_traces)}")
+            print(f"   Validation traces: {original_valid} → {len(validation_traces)}")
+            all_traces = training_traces + validation_traces
         print(f"   ⚡ Training akan sangat cepat untuk testing!")
-        
-        # Verifikasi traces exists di HDF5
-        print(f"🔍 Verifying traces exist in HDF5...")
-        try:
-            with h5py.File(os.path.join(datasets_dir, 'indonesia_train.hdf5'), 'r') as f:
-                missing_traces = []
-                for trace in all_traces[:3]:  # Cek 3 traces pertama
-                    trace_path = f'data/{trace}'
-                    if trace_path not in f:
-                        missing_traces.append(trace)
-                    else:
-                        data_shape = f[trace_path].shape
-                        print(f"   ✅ {trace}: shape {data_shape}")
-                
-                if missing_traces:
-                    print(f"   ❌ Missing traces: {missing_traces}")
-                    return None
-                else:
-                    print(f"   ✅ All checked traces exist in HDF5")
-        except Exception as e:
-            print(f"   ❌ Error reading HDF5: {e}")
-            return None
     
-    # Model parameters
+    # Model parameters - define before using in generators
     input_dim = (30085, 3)  # Signature Indonesia: 300.8 detik @ 100Hz
+    
+    # Create data splits
+    if use_combined_data:
+        # Split combined data 80:20
+        train_split = int(0.8 * len(all_traces))
+        training_traces = all_traces[:train_split]
+        validation_traces = all_traces[train_split:]
+        
+        print(f"📊 Data splits from combined:")
+        print(f"   Training: {len(training_traces)} traces")
+        print(f"   Validation: {len(validation_traces)} traces")
+        print(f"   Training %: {len(training_traces)/len(all_traces)*100:.1f}%")
+        print(f"   Validation %: {len(validation_traces)/len(all_traces)*100:.1f}%")
+    
+    # Create data generators
+    print(f"🔄 Creating data generators...")
+    print(f"   Batch size: {batch_size}")
+    
+    if use_combined_data:
+        # Single training generator with split
+        training_generator = DataGenerator(
+            list_IDs=training_traces,
+            file_name=train_hdf5,
+            dim=input_dim[0],
+            batch_size=batch_size,
+            n_channels=3,
+            shuffle=True,
+            norm_mode='std',
+            label_type='triangle',
+            augmentation=augmentation,
+            add_event_r=0.6,
+            shift_event_r=0.9,
+            add_noise_r=0.3,
+            drop_channe_r=0.2,
+            scale_amplitude_r=0.5,
+            pre_emphasis=True,
+            add_gap_r=0.1
+        )
+        
+        validation_generator = DataGenerator(
+            list_IDs=validation_traces,
+            file_name=train_hdf5,
+            dim=input_dim[0],
+            batch_size=batch_size,
+            n_channels=3,
+            shuffle=False,
+            norm_mode='std',
+            label_type='triangle',
+            augmentation=False,
+            pre_emphasis=True
+        )
+        
+    else:
+        # Separate training and validation generators
+        training_generator = DataGenerator(
+            list_IDs=training_traces,
+            file_name=train_hdf5,
+            dim=input_dim[0],
+            batch_size=batch_size,
+            n_channels=3,
+            shuffle=True,
+            norm_mode='std',
+            label_type='triangle',
+            augmentation=augmentation,
+            add_event_r=0.6,
+            shift_event_r=0.9,
+            add_noise_r=0.3,
+            drop_channe_r=0.2,
+            scale_amplitude_r=0.5,
+            pre_emphasis=True,
+            add_gap_r=0.1
+        )
+        
+        validation_generator = DataGenerator(
+            list_IDs=validation_traces,
+            file_name=valid_hdf5,  # Use separate validation HDF5
+            dim=input_dim[0],
+            batch_size=batch_size,
+            n_channels=3,
+            shuffle=False,
+            norm_mode='std',
+            label_type='triangle',
+            augmentation=False,
+            pre_emphasis=True
+        )
+    
+    print(f"✅ Data generators ready!")
+    print(f"📊 Training batches: {len(training_generator)}")
+    print(f"📊 Validation batches: {len(validation_generator)}")
+    print(f"📊 Total training samples: {len(training_traces)}")
+    print(f"📊 Total validation samples: {len(validation_traces)}")
     
     print(f"\n⚙️ KONFIGURASI TRAINING:")
     print(f"   Input dimension: {input_dim} (300.8 detik)")
@@ -366,26 +462,6 @@ def train_indonesia_eqt(
     if debug_traces:
         print(f"   🐛 DEBUG: Limited to {debug_traces} traces")
         print(f"   🎯 Purpose: Quick functionality test")
-    
-    # Split data
-    print(f"\n🔄 SPLITTING DATA...")
-    np.random.seed(42)  # Reproducible
-    np.random.shuffle(all_traces)
-    
-    if debug_traces:
-        # Untuk debug, pastikan selalu ada training data
-        print(f"🐛 DEBUG: Gunakan semua {debug_traces} traces untuk training")
-        training_traces = all_traces  # Semua traces untuk training
-        validation_traces = all_traces[-1:]  # 1 trace terakhir untuk validation 
-        print(f"   Training: {len(training_traces)} traces")
-        print(f"   Validation: {len(validation_traces)} traces")
-    else:
-        split_idx = int(0.8 * len(all_traces))
-        training_traces = all_traces[:split_idx]
-        validation_traces = all_traces[split_idx:]
-        print(f"🔀 Shuffling traces...")
-        print(f"   Training: {len(training_traces)} traces")
-        print(f"   Validation: {len(validation_traces)} traces")
     
     # Build model
     print(f"\n🏗️ BUILDING MODEL...")
@@ -489,79 +565,6 @@ def train_indonesia_eqt(
     
     print(f"✅ Model berhasil dibuat!")
     print(f"   Total parameters: {model.count_params():,}")
-    
-    # Setup data generators
-    print(f"\n🔄 SETUP DATA GENERATORS...")
-    
-    # Augmentation parameters - disesuaikan untuk data Indonesia
-    if augmentation:
-        aug_params = {
-            'shift_event_r': 0.9,        # 90% chance shift P-S events  
-            'add_noise_r': 0.3,          # 30% chance add Gaussian noise
-            'drop_channe_r': 0.2,        # 20% chance drop channels
-            'scale_amplitude_r': 0.5,    # 50% chance scale amplitude
-            'add_gap_r': 0.1,           # 10% chance add data gaps (noise only)
-        }
-        print(f"🎯 Augmentation aktif:")
-        print(f"   - Shift events: {aug_params['shift_event_r']*100}%")
-        print(f"   - Add noise: {aug_params['add_noise_r']*100}%") 
-        print(f"   - Drop channels: {aug_params['drop_channe_r']*100}%")
-        print(f"   - Scale amplitude: {aug_params['scale_amplitude_r']*100}%")
-        print(f"   - Add gaps: {aug_params['add_gap_r']*100}%")
-    else:
-        aug_params = {
-            'shift_event_r': None,
-            'add_noise_r': None,
-            'drop_channe_r': None,
-            'scale_amplitude_r': None,
-            'add_gap_r': None,
-        }
-        print(f"🎯 Augmentation dinonaktifkan")
-    
-    params_training = {
-        'dim': input_dim[0],
-        'batch_size': batch_size,
-        'n_channels': input_dim[-1],
-        'shuffle': True,
-        'norm_mode': 'std',
-        'label_type': 'gaussian',
-        'augmentation': augmentation,
-        'file_name': train_hdf5,
-        'coda_ratio': 0.4,
-        'pre_emphasis': True,
-        **aug_params  # Tambahkan augmentation parameters
-    }
-    
-    params_validation = params_training.copy()
-    params_validation.update({
-        'shuffle': False,
-        'augmentation': False,  # No augmentation for validation
-        'shift_event_r': None,  # Reset augmentation for validation
-        'add_noise_r': None,
-        'drop_channe_r': None,
-        'scale_amplitude_r': None,
-        'add_gap_r': None,
-    })
-    
-    training_generator = DataGenerator(training_traces, **params_training)
-    validation_generator = DataGenerator(validation_traces, **params_validation)
-    
-    print(f"✅ Data generators ready!")
-    print(f"📊 Training generator batches: {len(training_generator)}")
-    print(f"📊 Validation generator batches: {len(validation_generator)}")
-    
-    # Test first batch loading
-    if debug_traces:
-        print(f"\n🔍 TESTING FIRST BATCH LOADING...")
-        try:
-            print(f"   Loading batch 0...")
-            first_batch = training_generator[0]
-            print(f"   ✅ First batch loaded successfully!")
-            print(f"   Input shape: {first_batch[0]['input'].shape}")
-            print(f"   Detector shape: {first_batch[1]['detector'].shape}")
-        except Exception as e:
-            print(f"   ❌ Error loading first batch: {e}")
-            return None
     
     # Setup output directory
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -721,15 +724,35 @@ def train_indonesia_eqt(
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)
         
-        # Limit steps per epoch untuk mencegah stuck
-        max_train_steps = min(len(training_generator), 20)  # Maksimal 20 batches per epoch
-        max_val_steps = min(len(validation_generator), 5)   # Maksimal 5 batches validation
+        # Training strategy: Gunakan semua data untuk training yang optimal
+        # Hanya batasi jika debug mode aktif untuk testing cepat
+        if debug_traces:
+            max_train_steps = min(len(training_generator), 5)   # Limited untuk debug
+            max_val_steps = min(len(validation_generator), 2)   # Limited untuk debug
+            print(f"🐛 Debug mode: Limited training/validation")
+        else:
+            max_train_steps = len(training_generator)  # Gunakan SEMUA training data
+            max_val_steps = len(validation_generator)   # Gunakan SEMUA validation data
+            print(f"📊 Full training: Using all available data")
+        
+        # Calculate data coverage - GUNAKAN TRACES ASLI, bukan generator.length * batch_size
+        total_train_samples = len(training_traces)  # Jumlah traces asli yang digunakan
+        total_val_samples = len(validation_traces)   # Jumlah traces asli yang digunakan
+        used_train_samples = total_train_samples if not debug_traces else min(total_train_samples, debug_traces)
+        used_val_samples = total_val_samples if not debug_traces else min(total_val_samples, debug_traces)
+        
+        print(f"   Training: {used_train_samples}/{total_train_samples} samples ({used_train_samples/total_train_samples*100:.1f}%)")
+        print(f"   Validation: {used_val_samples}/{total_val_samples} samples ({used_val_samples/total_val_samples*100:.1f}%)")
+        print(f"   Training batches: {len(training_generator)} (batch_size={training_generator.batch_size})")
+        print(f"   Validation batches: {len(validation_generator)} (batch_size={validation_generator.batch_size})")
         
         # Log ke file
         logger.info(f"📊 Training strategy:")
         logger.info(f"   - Max training steps per epoch: {max_train_steps}")
         logger.info(f"   - Max validation steps: {max_val_steps}")
         logger.info(f"   - Total epochs: {epochs}")
+        logger.info(f"   - Training coverage: {used_train_samples/total_train_samples*100:.1f}%")
+        logger.info(f"   - Validation coverage: {used_val_samples/total_val_samples*100:.1f}%")
         
         history = type('History', (), {})()
         history.history = {
@@ -739,8 +762,8 @@ def train_indonesia_eqt(
         }
         
         print(f"📊 Training: {max_train_steps} batches/epoch, Validation: {max_val_steps} batches")
-        print(f"🚀 Starting {epochs} epochs training...")
-        print()  # Space before progress bars
+        print(f"🚀 Starting {epochs} epochs training with full data coverage...")
+        print()
         
         # Main training loop dengan clean tqdm
         for epoch in range(epochs):
@@ -825,7 +848,24 @@ def train_indonesia_eqt(
         logger.info("🔍 Starting model testing phase...")
         
         test_results = []
-        test_batches = min(len(validation_generator), 10)
+        
+        # Test pada semua validation data untuk hasil yang akurat
+        # Tapi bisa dibatasi jika debug_traces aktif untuk testing cepat
+        if debug_traces:
+            test_batches = min(len(validation_generator), 5)  # Limited untuk debug
+            print(f"🐛 Debug mode: Testing limited to {test_batches} batches")
+        else:
+            test_batches = len(validation_generator)  # Test SEMUA validation data
+            print(f"📊 Testing all validation data: {test_batches} batches")
+        
+        # Gunakan jumlah traces asli untuk perhitungan akurat
+        total_val_samples = len(validation_traces)  # Jumlah traces validation asli
+        max_possible_test_samples = test_batches * validation_generator.batch_size
+        expected_test_samples = min(total_val_samples, max_possible_test_samples)
+        
+        print(f"   Total validation samples: {total_val_samples}")
+        print(f"   Expected test samples: {expected_test_samples}")
+        print(f"   Test batches: {test_batches} (batch_size={validation_generator.batch_size})")
         
         test_desc = "Testing Model"
         with tqdm(total=test_batches, desc=test_desc, unit="batch",
@@ -975,6 +1015,7 @@ def train_indonesia_eqt(
             
             # Print key metrics
             print(f"✅ Test results saved: {len(test_results)} samples")
+            print(f"📊 Coverage: {len(test_results)}/{total_val_samples} validation samples ({len(test_results)/total_val_samples*100:.1f}%)")
             print(f"📊 Key Metrics:")
             print(f"   🎯 Earthquake Detection Accuracy: {summary_stats['earthquake_detection_accuracy']:.3f}")
             print(f"   🎯 P-wave Detection Accuracy: {summary_stats['P_detection_accuracy']:.3f}")
@@ -1104,8 +1145,8 @@ def train_indonesia_eqt(
         f.write(f"Combined data: {use_combined_data}\n")
     
     # Cleanup temporary files
-    if use_combined_data and os.path.exists(combined_csv):
-        os.remove(combined_csv)
+    if use_combined_data and os.path.exists("../../datasets/temp_combined.csv"):
+        os.remove("../../datasets/temp_combined.csv")
     
     print(f"✅ Hasil tersimpan di: {output_dir}")
     print("="*80)
