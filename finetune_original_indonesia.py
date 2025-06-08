@@ -17,7 +17,12 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+
+# Suppress TensorFlow warnings and verbose output
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # 0=all, 1=filter INFO, 2=filter WARNING, 3=filter ERROR
 import tensorflow as tf
+tf.get_logger().setLevel('ERROR')  # Only show errors
+
 import h5py
 from datetime import datetime
 import json
@@ -171,6 +176,39 @@ class IndonesiaDataGenerator(tf.keras.utils.Sequence):
             if i < self.dim:
                 triangle_val = (end - i) / (end - arrival) if end > arrival else 0
                 label[i] = max(label[i], triangle_val)  # Take maximum to combine peaks
+
+class RealTimeProgressCallback(tf.keras.callbacks.Callback):
+    """Custom callback untuk menampilkan progress real-time"""
+    
+    def on_epoch_begin(self, epoch, logs=None):
+        print(f"\n📈 Epoch {epoch + 1} starting...", flush=True)
+    
+    def on_epoch_end(self, epoch, logs=None):
+        logs = logs or {}
+        print(f"✅ Epoch {epoch + 1} completed:", flush=True)
+        print(f"   Training Loss: {logs.get('loss', 0):.4f}", flush=True)
+        print(f"   Validation Loss: {logs.get('val_loss', 0):.4f}", flush=True)
+        print(f"   Learning Rate: {logs.get('lr', 0):.6f}", flush=True)
+        
+        # Show improvement
+        if epoch > 0:
+            val_loss = logs.get('val_loss', float('inf'))
+            if hasattr(self, 'best_val_loss'):
+                if val_loss < self.best_val_loss:
+                    print(f"   🎯 Validation loss improved: {self.best_val_loss:.4f} → {val_loss:.4f}", flush=True)
+                    self.best_val_loss = val_loss
+                else:
+                    print(f"   ⚠️  Validation loss: {val_loss:.4f} (no improvement)", flush=True)
+            else:
+                self.best_val_loss = val_loss
+        else:
+            self.best_val_loss = logs.get('val_loss', float('inf'))
+    
+    def on_batch_end(self, batch, logs=None):
+        # Show progress every 5 batches
+        if (batch + 1) % 5 == 0:
+            logs = logs or {}
+            print(f"   Batch {batch + 1}: loss={logs.get('loss', 0):.4f}", flush=True)
 
 def load_original_model(model_path):
     """Load original EQTransformer model with custom objects"""
@@ -492,7 +530,7 @@ def test_model_on_validation(model, data_info, output_dir, batch_size=16,
     
     # Evaluate model
     print(f"📊 Evaluating on {len(data_info['valid_traces'])} validation traces...")
-    evaluation_results = model.evaluate(valid_generator, verbose=1)
+    evaluation_results = model.evaluate(valid_generator, verbose=0)  # Silent evaluation
     
     # Create evaluation report
     metrics_names = model.metrics_names
@@ -834,7 +872,10 @@ def setup_training_callbacks(output_dir, patience=5):
             patience=patience//2,
             min_lr=1e-6,
             verbose=1
-        )
+        ),
+        
+        # Real-time progress callback
+        RealTimeProgressCallback()
     ]
     
     print(f"✅ Callbacks configured:")
@@ -898,24 +939,27 @@ def fine_tune_model(
     print(f"✅ Model compiled with learning rate: {learning_rate}")
     
     # 7. Train model
-    print(f"\n🚀 Starting fine-tuning...")
-    print(f"   Epochs: {epochs}")
-    print(f"   Batch size: {batch_size}")
-    print(f"   Learning rate: {learning_rate}")
-    print(f"   Training samples: {len(data_info['train_traces'])}")
-    print(f"   Validation samples: {len(data_info['valid_traces'])}")
-    print(f"   P-wave threshold: {p_threshold}")
-    print(f"   S-wave threshold: {s_threshold}")
-    print(f"   Detection threshold: {det_threshold}")
+    print(f"\n🚀 Starting fine-tuning...", flush=True)
+    print(f"   Epochs: {epochs}", flush=True)
+    print(f"   Batch size: {batch_size}", flush=True)
+    print(f"   Learning rate: {learning_rate}", flush=True)
+    print(f"   Training samples: {len(data_info['train_traces'])}", flush=True)
+    print(f"   Validation samples: {len(data_info['valid_traces'])}", flush=True)
+    print(f"   P-wave threshold: {p_threshold}", flush=True)
+    print(f"   S-wave threshold: {s_threshold}", flush=True)
+    print(f"   Detection threshold: {det_threshold}", flush=True)
     
     start_time = datetime.now()
+    
+    # Force flush stdout untuk real-time output
+    sys.stdout.flush()
     
     history = model.fit(
         train_gen,
         validation_data=valid_gen,
         epochs=epochs,
         callbacks=callbacks,
-        verbose=1
+        verbose=1  # Kembali ke progress bar dengan custom callback
     )
     
     end_time = datetime.now()

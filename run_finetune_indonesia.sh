@@ -192,7 +192,7 @@ echo "   All results (plots, models, logs, tests) will be saved there"
 START_TIME=$(date +%s)
 
 # Run fine-tuning with all parameters
-python finetune_original_indonesia.py \
+python -u finetune_original_indonesia.py \
     --model "$MODEL_PATH" \
     --epochs $EPOCHS \
     --batch_size $BATCH_SIZE \
