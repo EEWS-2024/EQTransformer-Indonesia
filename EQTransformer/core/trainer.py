@@ -26,7 +26,7 @@ import time
 
 import shutil
 import multiprocessing
-from .EqT_utils import DataGenerator, _lr_schedule, cred2, PreLoadGenerator, data_reader
+from .EqT_utils import DataGenerator, _lr_schedule, cred2, PreLoadGenerator
 import datetime
 from tqdm import tqdm
 from tensorflow.python.util import deprecation

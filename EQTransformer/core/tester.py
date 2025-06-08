@@ -26,7 +26,8 @@ import shutil
 from .EqT_utils import f1, SeqSelfAttention, FeedForward, LayerNormalization
 from .EqT_utils import generate_arrays_from_file, picker
 from .EqT_utils import DataGeneratorTest, PreLoadGeneratorTest
-np.warnings.filterwarnings('ignore')
+import warnings
+warnings.filterwarnings('ignore')
 import datetime
 from tqdm import tqdm
 from tensorflow.python.util import deprecation
