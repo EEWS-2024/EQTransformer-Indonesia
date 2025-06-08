@@ -1,0 +1,25 @@
+{
+  "validation_evaluation": {
+    "total_traces": 411,
+    "batch_size": 256,
+    "evaluation_date": "2025-06-08T10:30:29.320522"
+  },
+  "metrics": {
+    "loss": 0.017702320590615273,
+    "detector_loss": 0.04158567637205124,
+    "picker_P_loss": 0.010830645449459553,
+    "picker_S_loss": 0.011928391642868519,
+    "detector_f1": 0.0006289898883551359,
+    "picker_P_f1": 0.014528767205774784,
+    "picker_S_f1": 0.0
+  },
+  "sample_predictions": {
+    "batch_size": 256,
+    "detection_accuracy": 0.9719563802083333,
+    "p_picking_accuracy": 0.989314453125,
+    "s_picking_accuracy": 0.991951171875,
+    "mean_detection_confidence": 0.010773693211376667,
+    "mean_p_confidence": 0.0030103567987680435,
+    "mean_s_confidence": 0.002950812689960003
+  }
+}

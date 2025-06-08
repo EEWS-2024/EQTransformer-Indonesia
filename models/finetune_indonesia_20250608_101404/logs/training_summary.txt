@@ -1,0 +1,18 @@
+EQTransformer Fine-tuning Summary Report
+==================================================
+
+Timestamp: 20250608_101404
+Training Duration: 0:16:17.122128
+Detection Thresholds: P=0.05, S=0.05, Det=0.05
+Final Training Loss: 0.018402
+Final Validation Loss: 0.017677
+Best Validation Loss: 0.017619
+Validation Samples Tested: 411
+
+Files Created:
+  - best_model: models/finetune_indonesia_20250608_101404/model/best_finetuned_model.h5
+  - final_model: models/finetune_indonesia_20250608_101404/model/final_finetuned_model.h5
+  - comprehensive_plot: models/finetune_indonesia_20250608_101404/plots/training_history_comprehensive.png
+  - simple_plot: models/finetune_indonesia_20250608_101404/plots/loss_curves.png
+  - validation_results: models/finetune_indonesia_20250608_101404/results/validation_results.json
+  - prediction_plot: models/finetune_indonesia_20250608_101404/results/prediction_sample.png

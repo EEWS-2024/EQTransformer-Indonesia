@@ -6,7 +6,7 @@ log/
 phasenet/test_data
 site/
 output*/
-result*/
+result/
 *.pyc
 *.png
 *.egg-info

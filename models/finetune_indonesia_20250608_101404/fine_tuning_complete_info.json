@@ -1,0 +1,68 @@
+{
+  "fine_tuning_info": {
+    "timestamp": "20250608_101404",
+    "original_model": "models/original_model/EqT_original_model.h5",
+    "output_directory": "models/finetune_indonesia_20250608_101404",
+    "strategy": "freeze_encoder_train_decoder"
+  },
+  "model_config": {
+    "input_shape": "(6000, 3)",
+    "encoder_frozen": true,
+    "decoder_trainable": true,
+    "learning_rate": 0.0001,
+    "epochs_trained": 102
+  },
+  "dataset_config": {
+    "train_samples": 1642,
+    "valid_samples": 411,
+    "batch_size": 256,
+    "augmentation": true,
+    "windowing": "30000\u21926000 samples (optimal P/S centered)"
+  },
+  "threshold_config": {
+    "p_threshold": 0.05,
+    "s_threshold": 0.05,
+    "det_threshold": 0.05,
+    "description": "Thresholds used for peak detection during validation testing"
+  },
+  "training_results": {
+    "final_train_loss": 0.01840236224234104,
+    "final_val_loss": 0.017677154392004013,
+    "best_val_loss": 0.017619401216506958,
+    "training_duration_seconds": 977.122128,
+    "training_duration_formatted": "0:16:17.122128"
+  },
+  "files_created": {
+    "best_model": "models/finetune_indonesia_20250608_101404/model/best_finetuned_model.h5",
+    "final_model": "models/finetune_indonesia_20250608_101404/model/final_finetuned_model.h5",
+    "comprehensive_plot": "models/finetune_indonesia_20250608_101404/plots/training_history_comprehensive.png",
+    "simple_plot": "models/finetune_indonesia_20250608_101404/plots/loss_curves.png",
+    "validation_results": "models/finetune_indonesia_20250608_101404/results/validation_results.json",
+    "prediction_plot": "models/finetune_indonesia_20250608_101404/results/prediction_sample.png"
+  },
+  "validation_evaluation": {
+    "validation_evaluation": {
+      "total_traces": 411,
+      "batch_size": 256,
+      "evaluation_date": "2025-06-08T10:30:29.320522"
+    },
+    "metrics": {
+      "loss": 0.017702320590615273,
+      "detector_loss": 0.04158567637205124,
+      "picker_P_loss": 0.010830645449459553,
+      "picker_S_loss": 0.011928391642868519,
+      "detector_f1": 0.0006289898883551359,
+      "picker_P_f1": 0.014528767205774784,
+      "picker_S_f1": 0.0
+    },
+    "sample_predictions": {
+      "batch_size": 256,
+      "detection_accuracy": 0.9719563802083333,
+      "p_picking_accuracy": 0.989314453125,
+      "s_picking_accuracy": 0.991951171875,
+      "mean_detection_confidence": 0.010773693211376667,
+      "mean_p_confidence": 0.0030103567987680435,
+      "mean_s_confidence": 0.002950812689960003
+    }
+  }
+}

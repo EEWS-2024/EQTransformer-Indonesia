@@ -1,0 +1,13 @@
+{
+  "total_traces": 256,
+  "p_detection_rate": "97.3%",
+  "s_detection_rate": "74.2%",
+  "event_detection_rate": "80.1%",
+  "p_accuracy_10_samples": "36.7%",
+  "p_accuracy_20_samples": "48.8%",
+  "s_accuracy_10_samples": "12.1%",
+  "s_accuracy_20_samples": "21.1%",
+  "mean_p_confidence": "0.260",
+  "mean_s_confidence": "0.104",
+  "mean_det_confidence": "0.140"
+}

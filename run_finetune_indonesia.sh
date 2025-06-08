@@ -19,8 +19,8 @@ CONSERVATIVE_MODEL="models/original_model_conservative/EqT_model_conservative.h5
 MODEL_TYPE="original"  # Change to "conservative" for conservative model
 
 # Fine-tuning parameters
-EPOCHS=2
-BATCH_SIZE=64
+EPOCHS=200
+BATCH_SIZE=256
 LEARNING_RATE=0.0001
 PATIENCE=5
 AUGMENTATION="true"
